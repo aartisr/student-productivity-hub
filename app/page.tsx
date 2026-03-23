@@ -45,7 +45,7 @@ import {
 } from "./domain";
 import { loadAppData, saveAppData } from "./persistence";
 import { AccessDeniedPanel, AssignmentsPanel, AuthPanel, PlannerPanel } from "./components/corePanels";
-import { CommandCenterPanel, ModuleWorkspacePanel, WorkloadRiskPanel } from "./components/homePanels";
+import { CommandCenterPanel, ModuleWorkspacePanel, OnboardingPanel, WorkloadRiskPanel } from "./components/homePanels";
 import { AnalyticsPanel, GpaPanel, TimerPanel } from "./components/progressPanels";
 import { AssessmentRuntimePanel, CompatibilityTargetsPanel, InstructorModePanel, LessonStudioPanel, LmsConnectorPanel, QuestionBankBuilderPanel, QuizAdapterPanel, QuizBanksPanel, QuizOverviewPanel, ShareExchangePanel } from "./components/quizPanels";
 import { BackupPanel, MotivationPanel, StudyCoachPanel } from "./components/systemPanels";
@@ -471,13 +471,21 @@ export default function Page() {
   });
 
   const navModules = useMemo(() => {
+    if (!currentUser) {
+      const guestOrder: ViewKey[] = ["home", "auth", "coach"];
+      const byKey = new Map(MODULE_CATALOG.map((item) => [item.key, item]));
+      return guestOrder
+        .map((key) => byKey.get(key))
+        .filter((item): item is ModuleDescriptor => Boolean(item));
+    }
+
     const byKey = new Map(MODULE_CATALOG.map((item) => [item.key, item]));
     const order = settings.viewOrder.filter((key) => byKey.has(key));
     const enabled = new Set(settings.enabledViews.filter((key) => byKey.has(key)));
     const ordered = order.map((key) => byKey.get(key)).filter((item): item is ModuleDescriptor => Boolean(item));
     const visible = ordered.filter((item) => enabled.has(item.key));
     return visible.length ? visible : [{ key: "home" as ViewKey, label: "Home" }];
-  }, [settings.viewOrder, settings.enabledViews]);
+  }, [currentUser, settings.viewOrder, settings.enabledViews]);
 
   useEffect(() => {
     if (!navModules.some((module) => module.key === view)) {
@@ -612,6 +620,7 @@ export default function Page() {
 
   return (
     <main className={`main-shell ${previewMode === "auto" ? "" : `preview-${previewMode}`}`}>
+      <a href="#main-content" className="skip-link">Skip to main content</a>
       <section className="hero">
         <div className="hero-head">
           <h1>Student Productivity Hub</h1>
@@ -661,6 +670,7 @@ export default function Page() {
           <button
             key={module.key}
             className={view === module.key ? "active" : ""}
+            aria-current={view === module.key ? "page" : undefined}
             onClick={() => {
               if (!currentUser && authRequiredViews.has(module.key)) {
                 setView("auth");
@@ -675,9 +685,22 @@ export default function Page() {
         ))}
       </nav>
 
-      <section className="section-grid">
+      <section id="main-content" className="section-grid">
         {view === "home" && (
           <>
+            <OnboardingPanel
+              isSignedIn={Boolean(currentUser)}
+              hasAssignments={assignments.length > 0}
+              hasPlannerTasks={planner.length > 0}
+              hasQuizBanks={quizBanks.length > 0}
+              hasStudySessions={sessions.some((entry) => entry.mode === "study")}
+              onGoAuth={() => setView("auth")}
+              onGoAssignments={() => setView("assignments")}
+              onGoPlanner={() => setView("planner")}
+              onGoQuiz={() => setView("quiz")}
+              onGoTimer={() => setView("timer")}
+            />
+
             <CommandCenterPanel
               title={nextStep.title}
               detail={nextStep.detail}
@@ -694,32 +717,34 @@ export default function Page() {
               riskLevel={workload.riskLevel}
             />
 
-            <ModuleWorkspacePanel
-              currentUser={currentUser}
-              moduleProfiles={MODULE_PROFILES}
-              moduleCatalog={MODULE_CATALOG}
-              settings={settings}
-              moduleStatus={moduleStatus}
-              customProfileName={customProfileName}
-              customProfilesTransferText={customProfilesTransferText}
-              customProfilesImportMode={customProfilesImportMode}
-              customProfileConflictMode={customProfileConflictMode}
-              customProfileImportPreview={customProfileImportPreview}
-              setCustomProfileName={setCustomProfileName}
-              setCustomProfilesTransferText={setCustomProfilesTransferText}
-              setCustomProfilesImportMode={setCustomProfilesImportMode}
-              setCustomProfileConflictMode={setCustomProfileConflictMode}
-              onApplyModuleProfile={applyModuleProfile}
-              onSaveCurrentAsCustomProfile={saveCurrentAsCustomProfile}
-              onExportCustomProfiles={exportCustomProfiles}
-              onImportCustomProfiles={importCustomProfiles}
-              onApplyCustomProfile={applyCustomProfile}
-              onDeleteCustomProfile={deleteCustomProfile}
-              onToggleModule={toggleModule}
-              onMoveModule={moveModule}
-              onSetDefaultModule={setDefaultModule}
-              onResetModuleLayout={resetModuleLayout}
-            />
+            {currentUser ? (
+              <ModuleWorkspacePanel
+                currentUser={currentUser}
+                moduleProfiles={MODULE_PROFILES}
+                moduleCatalog={MODULE_CATALOG}
+                settings={settings}
+                moduleStatus={moduleStatus}
+                customProfileName={customProfileName}
+                customProfilesTransferText={customProfilesTransferText}
+                customProfilesImportMode={customProfilesImportMode}
+                customProfileConflictMode={customProfileConflictMode}
+                customProfileImportPreview={customProfileImportPreview}
+                setCustomProfileName={setCustomProfileName}
+                setCustomProfilesTransferText={setCustomProfilesTransferText}
+                setCustomProfilesImportMode={setCustomProfilesImportMode}
+                setCustomProfileConflictMode={setCustomProfileConflictMode}
+                onApplyModuleProfile={applyModuleProfile}
+                onSaveCurrentAsCustomProfile={saveCurrentAsCustomProfile}
+                onExportCustomProfiles={exportCustomProfiles}
+                onImportCustomProfiles={importCustomProfiles}
+                onApplyCustomProfile={applyCustomProfile}
+                onDeleteCustomProfile={deleteCustomProfile}
+                onToggleModule={toggleModule}
+                onMoveModule={moveModule}
+                onSetDefaultModule={setDefaultModule}
+                onResetModuleLayout={resetModuleLayout}
+              />
+            ) : null}
           </>
         )}
 
