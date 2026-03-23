@@ -2,6 +2,11 @@
 
 A standalone, mobile-first study operating system inspired by your AppLab `code.js`.
 
+## Owner
+
+- Repository owner: Arti Sri Ravikumar (@aartisr)
+- Canonical repository: https://github.com/aartisr/student-productivity-hub
+
 ## Documentation and Wiki
 
 Detailed usage documentation is available in the in-repo wiki:
