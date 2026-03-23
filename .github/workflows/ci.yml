@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify-and-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      NEXTAUTH_URL: http://127.0.0.1:3001
+      AUTH_SECRET: ci-local-secret-do-not-use-in-prod
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.11
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify build and types
+        run: npm run verify
+
+      - name: Install Playwright browser
+        run: npx playwright install chromium
+
+      - name: Run auth and responsive smoke tests
+        run: npx playwright test tests/e2e/auth-ux.spec.ts tests/e2e/access-control.spec.ts tests/e2e/responsive.spec.ts tests/e2e/responsive-visual.spec.ts --project=mobile-iphone-13-mini
