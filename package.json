@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "A mobile-first study operating system with authentication, planning, and quiz workflows.",
   "private": true,
-  "author": "Arti Sri Ravikumar",
-  "license": "UNLICENSED",
+  "author": "Aarti Sri Ravikumar",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/aartisr/student-productivity-hub.git"

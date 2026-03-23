@@ -4,7 +4,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Auth.js](https://img.shields.io/badge/Auth.js-v4-4B5563)](https://authjs.dev/)
 [![Playwright](https://img.shields.io/badge/Playwright-E2E-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/)
-[![License](https://img.shields.io/badge/License-UNLICENSED-red)](#license)
+[![License](https://img.shields.io/badge/License-MIT-green)](#license)
 
 A student-centric, research-oriented, mobile-first study operating system that integrates planning, focus workflows, quiz authoring, and learning analytics within a single extensible web application.
 
@@ -37,7 +37,7 @@ This repository is designed for three outcomes:
 
 ## Owner and Repository
 
-- Repository owner: Arti Sri Ravikumar (`@aartisr`)
+- Repository owner: Aarti Sri Ravikumar (`@aartisr`)
 - Canonical repository: https://github.com/aartisr/student-productivity-hub
 
 ## Mission and Academic Positioning
@@ -394,6 +394,11 @@ Open questions for community and research collaboration:
 
 Contributions are welcome via pull requests and issue discussions.
 
+Contributor onboarding references:
+
+- [Contributing Guide](CONTRIBUTING.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+
 Recommended contribution flow:
 
 1. Open an issue describing the problem, rationale, and expected behavior.
@@ -404,6 +409,4 @@ Documentation-first contributions are encouraged. If you improve a workflow, upd
 
 ## License
 
-This project is currently **UNLICENSED**.
-
-No permission is granted for use, modification, or distribution unless explicit written authorization is provided by the repository owner.
+This project is released under the MIT License. See `LICENSE` for the full text.
