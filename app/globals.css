@@ -45,6 +45,23 @@ body {
     max(0.85rem, env(safe-area-inset-left));
 }
 
+.skip-link {
+  position: absolute;
+  left: 0.8rem;
+  top: -48px;
+  z-index: 30;
+  border-radius: 10px;
+  padding: 0.45rem 0.65rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: var(--brand);
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 0.6rem;
+}
+
 .main-shell.preview-mobile {
   width: min(100%, 390px);
 }
@@ -414,6 +431,10 @@ button:disabled {
 
 .module-list li {
   border-left-color: #0a7f66;
+}
+
+.onboarding-list li {
+  border-left-color: #5465ff;
 }
 
 .module-row {

@@ -22,6 +22,93 @@ export function CommandCenterPanel(props: CommandCenterPanelProps) {
   );
 }
 
+type OnboardingPanelProps = {
+  isSignedIn: boolean;
+  hasAssignments: boolean;
+  hasPlannerTasks: boolean;
+  hasQuizBanks: boolean;
+  hasStudySessions: boolean;
+  onGoAuth: () => void;
+  onGoAssignments: () => void;
+  onGoPlanner: () => void;
+  onGoQuiz: () => void;
+  onGoTimer: () => void;
+};
+
+export function OnboardingPanel(props: OnboardingPanelProps) {
+  const {
+    isSignedIn,
+    hasAssignments,
+    hasPlannerTasks,
+    hasQuizBanks,
+    hasStudySessions,
+    onGoAuth,
+    onGoAssignments,
+    onGoPlanner,
+    onGoQuiz,
+    onGoTimer,
+  } = props;
+
+  const steps = [
+    {
+      key: "auth",
+      title: "Sign in",
+      done: isSignedIn,
+      actionLabel: "Open Auth",
+      onAction: onGoAuth,
+    },
+    {
+      key: "assignments",
+      title: "Add your first assignment",
+      done: hasAssignments,
+      actionLabel: "Open Assignments",
+      onAction: onGoAssignments,
+    },
+    {
+      key: "planner",
+      title: "Capture one planner task",
+      done: hasPlannerTasks,
+      actionLabel: "Open Planner",
+      onAction: onGoPlanner,
+    },
+    {
+      key: "quiz",
+      title: "Create or import one quiz bank",
+      done: hasQuizBanks,
+      actionLabel: "Open Quiz Lab",
+      onAction: onGoQuiz,
+    },
+    {
+      key: "timer",
+      title: "Complete one focus timer cycle",
+      done: hasStudySessions,
+      actionLabel: "Open Pomodoro",
+      onAction: onGoTimer,
+    },
+  ];
+
+  const completeCount = steps.filter((step) => step.done).length;
+
+  return (
+    <article className="panel">
+      <h2>First-Week Onboarding</h2>
+      <p className="compact-line">
+        Follow this guided path to unlock a productive setup quickly. Progress: {completeCount}/{steps.length} complete.
+      </p>
+      <ul className="list onboarding-list mt-8">
+        {steps.map((step) => (
+          <li key={step.key} className={step.done ? "done" : ""}>
+            <div className="module-row">
+              <strong>{step.done ? "[done] " : "[todo] "}{step.title}</strong>
+              <button className="secondary" onClick={step.onAction}>{step.actionLabel}</button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </article>
+  );
+}
+
 import type {
   ModuleDescriptor,
   ModuleProfile,

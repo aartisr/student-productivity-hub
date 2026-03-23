@@ -234,19 +234,33 @@ export const gradeScale: Record<string, number> = {
 
 export const MODULE_CATALOG: ModuleDescriptor[] = [
   { key: "home", label: "Home" },
-  { key: "coach", label: "Study Coach" },
-  { key: "auth", label: "Auth" },
   { key: "assignments", label: "Assignments" },
   { key: "planner", label: "Planner" },
-  { key: "quiz", label: "Quiz Lab" },
   { key: "timer", label: "Pomodoro" },
+  { key: "quiz", label: "Quiz Lab" },
+  { key: "coach", label: "Study Coach" },
+  { key: "analytics", label: "Analytics" },
   { key: "gpa", label: "GPA" },
   { key: "motivation", label: "Motivation" },
-  { key: "analytics", label: "Analytics" },
   { key: "backup", label: "Export/Backup" },
+  { key: "auth", label: "Auth" },
 ];
 
 export const DEFAULT_VIEW_ORDER = MODULE_CATALOG.map((item) => item.key);
+
+const LEGACY_DEFAULT_VIEW_ORDER: ViewKey[] = [
+  "home",
+  "coach",
+  "auth",
+  "assignments",
+  "planner",
+  "quiz",
+  "timer",
+  "gpa",
+  "motivation",
+  "analytics",
+  "backup",
+];
 
 export const MODULE_PROFILES: ModuleProfile[] = [
   {
@@ -254,7 +268,7 @@ export const MODULE_PROFILES: ModuleProfile[] = [
     name: "Exam Prep",
     description: "Quiz-heavy flow with coach, deadlines, and focused sessions.",
     enabledViews: ["home", "coach", "assignments", "planner", "quiz", "timer", "analytics", "motivation", "backup", "auth"],
-    viewOrder: ["home", "coach", "quiz", "timer", "assignments", "planner", "analytics", "motivation", "backup", "auth", "gpa"],
+    viewOrder: ["home", "assignments", "planner", "timer", "quiz", "coach", "analytics", "gpa", "motivation", "backup", "auth"],
     defaultView: "coach",
   },
   {
@@ -262,7 +276,7 @@ export const MODULE_PROFILES: ModuleProfile[] = [
     name: "Daily Planner",
     description: "Planning-first setup focused on tasks, assignments, and routine.",
     enabledViews: ["home", "assignments", "planner", "timer", "analytics", "motivation", "backup", "auth"],
-    viewOrder: ["home", "assignments", "planner", "timer", "analytics", "motivation", "backup", "auth", "coach", "quiz", "gpa"],
+    viewOrder: ["home", "assignments", "planner", "timer", "coach", "quiz", "analytics", "gpa", "motivation", "backup", "auth"],
     defaultView: "assignments",
   },
   {
@@ -270,7 +284,7 @@ export const MODULE_PROFILES: ModuleProfile[] = [
     name: "Minimal Focus",
     description: "Low-noise mode with only core concentration modules visible.",
     enabledViews: ["home", "timer", "coach", "quiz", "motivation", "backup", "auth"],
-    viewOrder: ["home", "timer", "coach", "quiz", "motivation", "backup", "auth", "assignments", "planner", "analytics", "gpa"],
+    viewOrder: ["home", "timer", "quiz", "coach", "motivation", "backup", "auth", "assignments", "planner", "analytics", "gpa"],
     defaultView: "timer",
   },
 ];
@@ -299,7 +313,13 @@ export function normalizeUserSettings(input: UserSettings | undefined, fallbackN
     return values.filter((key, idx) => valid.has(key) && values.indexOf(key) === idx);
   };
 
-  const viewOrder = orderedUnique(input.viewOrder);
+  const isLegacyDefaultOrder =
+    Array.isArray(input.viewOrder) &&
+    input.viewOrder.length === LEGACY_DEFAULT_VIEW_ORDER.length &&
+    input.viewOrder.every((key, idx) => key === LEGACY_DEFAULT_VIEW_ORDER[idx]);
+
+  const incomingOrder = isLegacyDefaultOrder ? DEFAULT_VIEW_ORDER : input.viewOrder;
+  const viewOrder = orderedUnique(incomingOrder);
   for (const key of DEFAULT_VIEW_ORDER) {
     if (!viewOrder.includes(key)) viewOrder.push(key);
   }
