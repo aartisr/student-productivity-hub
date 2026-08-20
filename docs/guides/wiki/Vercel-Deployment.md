@@ -4,6 +4,8 @@
 
 Student Productivity Hub is a Next.js application and deploys directly to Vercel. The repository includes [vercel.json](../../../vercel.json) so Vercel installs dependencies with `npm ci` and builds with `npm run build`.
 
+The Vercel install command explicitly uses `https://registry.npmjs.org`. The checked-in lockfile is cross-platform and does not contain private registry download URLs.
+
 ## Before You Deploy
 
 1. Push the desired branch to GitHub.
@@ -12,7 +14,8 @@ Student Productivity Hub is a Next.js application and deploys directly to Vercel
 4. Add the production environment variables below.
 5. Add and verify the custom domain `sph.ai-aarti.com` in Vercel.
 6. Update each OAuth provider with the production callback URL.
-7. Deploy, then complete the smoke check.
+7. Remove any inherited `NPM_CONFIG_REGISTRY`, `NPM_TOKEN`, or `NODE_AUTH_TOKEN` values that point to a private package registry.
+8. Deploy, then complete the smoke check.
 
 ## Required Production Environment Variables
 
@@ -23,6 +26,8 @@ Student Productivity Hub is a Next.js application and deploys directly to Vercel
 | OAuth provider credentials | At least one provider | Configure only the providers you intend to offer. |
 | `INSTRUCTOR_EMAILS` | Recommended | Comma-separated instructor allowlist. |
 | `ADMIN_EMAILS` | Recommended | Comma-separated admin allowlist. |
+
+Do not configure a private npm registry or registry token in Vercel for this public project. Vercel should use the public npm registry specified by [vercel.json](../../../vercel.json).
 
 The application intentionally refuses to run at production runtime without `AUTH_SECRET`.
 
@@ -93,5 +98,7 @@ For authenticated preview testing, use a dedicated OAuth application with previe
 | OAuth callback rejected | Provider configuration mismatch | Verify the exact provider callback URL. |
 | No sign-in provider shown | Provider variables are absent or incomplete | Check client ID, secret, and tenant values. |
 | Session cannot access a protected page | Cookie or canonical host mismatch | Verify the custom domain, HTTPS, and `NEXTAUTH_URL`. |
+| `npm ci` returns `E401` | Stale private npm registry or token in Vercel | Remove `NPM_CONFIG_REGISTRY`, `NPM_TOKEN`, and `NODE_AUTH_TOKEN` from Vercel project settings, then redeploy. |
+| `npm ci` reports missing `@next/swc` or `sharp` packages | Old lockfile was deployed | Ensure the latest `package-lock.json` is pushed, then redeploy. |
 
 For operational context beyond deployment, see the [Operator and Admin Runbook](Operator-and-Admin-Runbook.md) and [Authentication and Roles](Authentication-and-Roles.md).
