@@ -146,6 +146,58 @@ body {
   font-weight: 700;
 }
 
+.footer-credit,
+.footer-identity {
+  display: inline-flex;
+  align-items: center;
+}
+
+.footer-credit {
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.footer-identity {
+  gap: 0.34rem;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.footer-identity:hover,
+.footer-identity:focus-visible {
+  color: var(--ink);
+}
+
+.footer-identity:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+
+.footer-identity-mark {
+  box-sizing: border-box;
+  width: 1.45rem;
+  height: 1.45rem;
+  flex: 0 0 1.45rem;
+  object-fit: contain;
+}
+
+.footer-identity-mark-aarti {
+  padding: 0.18rem;
+  border: 1px solid color-mix(in srgb, var(--brand) 24%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--brand) 7%, transparent);
+}
+
+.footer-identity-mark-pcss {
+  border: 1px solid color-mix(in srgb, var(--brand) 18%, transparent);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.footer-credit-divider {
+  color: color-mix(in srgb, var(--muted) 72%, transparent);
+}
+
 .app-header-actions {
   display: flex;
   flex: 0 0 auto;

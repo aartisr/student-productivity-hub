@@ -53,6 +53,20 @@ npm run verify
 npm run test:e2e
 ```
 
+## IndexNow
+
+The IndexNow verification key is published at [https://sph.ai-aarti.com/3450b713-fc17-4791-b160-f2c11b46f896.txt](https://sph.ai-aarti.com/3450b713-fc17-4791-b160-f2c11b46f896.txt). After the next production deployment, review the URLs without making a request:
+
+```bash
+npm run indexnow:submit
+```
+
+Submit the canonical sitemap URLs to IndexNow only when they have materially changed:
+
+```bash
+npm run indexnow:submit -- --submit
+```
+
 ## Documentation
 
 Everything beyond this orientation lives in one place: **[docs/README.md](docs/README.md)**.

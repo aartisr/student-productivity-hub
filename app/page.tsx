@@ -1128,7 +1128,26 @@ export default function Page() {
         )}
 
         <footer className="app-footer">
-          <span>Made with care by Aarti S Ravikumar</span>
+          <span className="footer-credit">
+            Made with care by
+            <a className="footer-identity" href="https://ai-aarti.com">
+              <img
+                className="footer-identity-mark footer-identity-mark-aarti"
+                src="https://ai-aarti.com/ravi-aarti-infinity-logo-small.svg"
+                alt=""
+              />
+              <span>Aarti S Ravikumar</span>
+            </a>
+            <span aria-hidden="true" className="footer-credit-divider">&middot;</span>
+            <a className="footer-identity" href="https://saugus.pioneercss.org">
+              <img
+                className="footer-identity-mark footer-identity-mark-pcss"
+                src="https://avatars.githubusercontent.com/u/166765628?v=4&s=64"
+                alt=""
+              />
+              <span>PCSS II</span>
+            </a>
+          </span>
           <a href="/story.html">Project story & thanks</a>
         </footer>
       </section>
