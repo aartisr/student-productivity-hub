@@ -1,5 +1,7 @@
 # FAQ
 
+> **Live workspace:** [Open Student Productivity Hub](https://sph.ai-aarti.com/).
+
 ## Do I need all OAuth providers configured?
 
 No. Configure one or many. Only configured providers appear in the Auth panel.

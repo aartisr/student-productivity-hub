@@ -1,5 +1,7 @@
 # Getting Started
 
+> **Live workspace:** [Open Student Productivity Hub](https://sph.ai-aarti.com/).
+
 This page walks you through installation, environment setup, and your first successful run.
 
 ## Prerequisites

@@ -21,9 +21,9 @@ test.describe("Role-based access control", () => {
     await page.goto("/");
 
     await expect(page.getByText("student@example.com")).toBeVisible();
-    await expect(page.getByText("STUDENT").first()).toBeVisible();
+    await expect(page.locator(".app-account")).toHaveAttribute("aria-label", /role student/);
 
-    await page.getByRole("button", { name: "Quiz Lab" }).click();
+    await page.getByRole("button", { name: "Quiz Lab", exact: true }).click();
 
     await expect(page.getByRole("heading", { name: "LMS Connector Access", exact: true })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Instructor Mode Access", exact: true })).toBeVisible();

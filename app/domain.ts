@@ -131,6 +131,83 @@ export type BlueprintConstraints = {
   hardPct: number;
 };
 
+// Viral Gamification Types
+export type StudyStreak = {
+  userId: string;
+  currentStreak: number;
+  longestStreak: number;
+  lastStudyDate: number;
+  totalStudyDays: number;
+};
+
+export type Achievement = {
+  id: string;
+  userId: string;
+  badgeId: string;
+  badgeName: string;
+  badgeDescription: string;
+  icon: string;
+  earnedAt: number;
+  shareableUrl?: string;
+};
+
+export type AchievementBadge = {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  requirement: string;
+  rarity: "common" | "rare" | "epic" | "legendary";
+};
+
+export type LeaderboardEntry = {
+  userId: string;
+  displayName: string;
+  rank: number;
+  score: number;
+  streakDays: number;
+  quizScore: number;
+  studyHours: number;
+  lastUpdated: number;
+};
+
+export type ReferralLink = {
+  id: string;
+  userId: string;
+  code: string;
+  createdAt: number;
+  invitesUsed: number;
+  rewardsEarned: number;
+};
+
+export type ReferralReward = {
+  id: string;
+  referrerId: string;
+  referredId: string;
+  rewardType: "badge" | "quiz_credit" | "premium_feature";
+  claimedAt: number;
+};
+
+export type StudyGroup = {
+  id: string;
+  name: string;
+  description: string;
+  createdBy: string;
+  members: string[];
+  topic: string;
+  createdAt: number;
+  goal: string;
+  isPublic: boolean;
+};
+
+export type SocialProof = {
+  totalUsers: number;
+  totalStudyHours: number;
+  averageStreak: number;
+  topicsTaught: number;
+  upcomingEvents: number;
+};
+
 export type ConnectorRequestLog = {
   id: string;
   createdAt: number;
@@ -180,6 +257,13 @@ export type AppData = {
   quizReviews: Record<string, ReviewState[]>;
   backups: Record<string, Snapshot[]>;
   settings: Record<string, UserSettings>;
+  // Viral gamification
+  streaks: Record<string, StudyStreak>;
+  achievements: Achievement[];
+  leaderboard: LeaderboardEntry[];
+  referrals: Record<string, ReferralLink>;
+  studyGroups: StudyGroup[];
+  socialProof: SocialProof;
 };
 
 export type UserSettings = {
@@ -215,6 +299,19 @@ export const defaultData: AppData = {
   quizReviews: {},
   backups: {},
   settings: {},
+  // Viral gamification defaults
+  streaks: {},
+  achievements: [],
+  leaderboard: [],
+  referrals: {},
+  studyGroups: [],
+  socialProof: {
+    totalUsers: 2847,
+    totalStudyHours: 45892,
+    averageStreak: 12,
+    topicsTaught: 156,
+    upcomingEvents: 8,
+  },
 };
 
 export const gradeScale: Record<string, number> = {

@@ -1,5 +1,7 @@
 # Quickstart Wall Poster
 
+> **Live workspace:** [Open Student Productivity Hub](https://sph.ai-aarti.com/).
+
 Large-format onboarding poster for classroom, lab, or team spaces.
 
 ## Choose Your Path

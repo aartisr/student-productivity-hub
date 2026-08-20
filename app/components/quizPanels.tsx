@@ -48,6 +48,40 @@ export function QuizOverviewPanel(props: QuizOverviewPanelProps) {
   );
 }
 
+type QuizWorkspace = "study" | "create" | "share";
+
+type QuizLabNavigationProps = {
+  activeWorkspace: QuizWorkspace;
+  onSelectWorkspace: (workspace: QuizWorkspace) => void;
+};
+
+export function QuizLabNavigation(props: QuizLabNavigationProps) {
+  const { activeWorkspace, onSelectWorkspace } = props;
+
+  return (
+    <nav className="quiz-workspace-nav" aria-label="Quiz Lab tasks">
+      <button
+        className={activeWorkspace === "study" ? "active" : ""}
+        onClick={() => onSelectWorkspace("study")}
+      >
+        Take a quiz
+      </button>
+      <button
+        className={activeWorkspace === "create" ? "active" : ""}
+        onClick={() => onSelectWorkspace("create")}
+      >
+        Create a quiz
+      </button>
+      <button
+        className={activeWorkspace === "share" ? "active" : ""}
+        onClick={() => onSelectWorkspace("share")}
+      >
+        Import, export, and share
+      </button>
+    </nav>
+  );
+}
+
 type CompatibilityTargetsPanelProps = {
   providerProfiles: ProviderProfile[];
   selectedTargets: string[];
@@ -90,6 +124,7 @@ type QuestionBankBuilderPanelProps = {
   quizCorrectText: string;
   quizExplanation: string;
   quizDraftQuestions: QuizQuestion[];
+  quizStatus: string;
   setQuizTitle: (value: string) => void;
   setQuizSubject: (value: string) => void;
   setQuizDifficulty: (value: string) => void;
@@ -115,6 +150,7 @@ export function QuestionBankBuilderPanel(props: QuestionBankBuilderPanelProps) {
     quizCorrectText,
     quizExplanation,
     quizDraftQuestions,
+    quizStatus,
     setQuizTitle,
     setQuizSubject,
     setQuizDifficulty,
@@ -183,9 +219,17 @@ export function QuestionBankBuilderPanel(props: QuestionBankBuilderPanelProps) {
       </div>
       <div className="btn-row mt-8">
         <button className="primary" onClick={onAddDraftQuestion}>Add question to draft</button>
-        <button className="secondary" onClick={onSaveDraftQuizBank}>Save bank</button>
+        <button
+          className="secondary"
+          onClick={onSaveDraftQuizBank}
+          disabled={!quizDraftQuestions.length}
+          title={!quizDraftQuestions.length ? "Add at least one question before saving" : undefined}
+        >
+          Save bank
+        </button>
       </div>
       <p className="compact-line">Draft question count: {quizDraftQuestions.length}</p>
+      {quizStatus ? <p className="status" role="status" aria-live="polite">{quizStatus}</p> : null}
     </article>
   );
 }
@@ -352,7 +396,7 @@ export function LessonStudioPanel(props: LessonStudioPanelProps) {
         <button className="primary" onClick={onSaveLesson}>{lessonDraftId ? "Update lesson" : "Save lesson"}</button>
         <button className="ghost" onClick={onResetLessonForm}>Reset form</button>
       </div>
-      {lessonStatus ? <p className="status">{lessonStatus}</p> : null}
+      {lessonStatus ? <p className="status" role="status" aria-live="polite">{lessonStatus}</p> : null}
 
       <h3 className="mt-8">My Lessons</h3>
       <ul className="list">
@@ -379,15 +423,17 @@ type ShareExchangePanelProps = {
   shareKind: ShareKind;
   shareLessonId: string;
   shareQuizId: string;
-  sharePayload: string;
+  generatedSharePayload: string;
+  importSharePayload: string;
   shareStatus: string;
   lessons: Lesson[];
   quizBanks: QuizBank[];
   setShareKind: (value: ShareKind) => void;
   setShareLessonId: (value: string) => void;
   setShareQuizId: (value: string) => void;
-  setSharePayload: (value: string) => void;
+  setImportSharePayload: (value: string) => void;
   onGenerateSharePack: () => void;
+  onCopyGeneratedSharePack: () => void;
   onImportSharePack: () => void;
 };
 
@@ -396,15 +442,17 @@ export function ShareExchangePanel(props: ShareExchangePanelProps) {
     shareKind,
     shareLessonId,
     shareQuizId,
-    sharePayload,
+    generatedSharePayload,
+    importSharePayload,
     shareStatus,
     lessons,
     quizBanks,
     setShareKind,
     setShareLessonId,
     setShareQuizId,
-    setSharePayload,
+    setImportSharePayload,
     onGenerateSharePack,
+    onCopyGeneratedSharePack,
     onImportSharePack,
   } = props;
 
@@ -447,18 +495,33 @@ export function ShareExchangePanel(props: ShareExchangePanelProps) {
 
       <div className="btn-row mt-8">
         <button className="primary" onClick={onGenerateSharePack}>Generate share pack</button>
-        <button className="secondary" onClick={onImportSharePack}>Import share pack</button>
       </div>
 
       <div className="form-row mt-8">
-        <label>Share payload</label>
+        <label>Generated share pack</label>
         <textarea
-          value={sharePayload}
-          onChange={(e) => setSharePayload(e.target.value)}
-          placeholder="Copy this payload and share it, or paste a received payload and import"
+          readOnly
+          value={generatedSharePayload}
+          placeholder="Your generated share pack will appear here"
         />
       </div>
-      {shareStatus ? <p className="status">{shareStatus}</p> : null}
+      <div className="btn-row">
+        <button className="secondary" onClick={onCopyGeneratedSharePack} disabled={!generatedSharePayload}>
+          Copy generated pack
+        </button>
+      </div>
+      <div className="form-row mt-8">
+        <label>Received share pack</label>
+        <textarea
+          value={importSharePayload}
+          onChange={(e) => setImportSharePayload(e.target.value)}
+          placeholder="Paste a share pack from another student"
+        />
+      </div>
+      <div className="btn-row">
+        <button className="secondary" onClick={onImportSharePack}>Import received pack</button>
+      </div>
+      {shareStatus ? <p className="status" role="status" aria-live="polite">{shareStatus}</p> : null}
     </article>
   );
 }
@@ -606,7 +669,14 @@ export function AssessmentRuntimePanel(props: AssessmentRuntimePanelProps) {
                 <button className="secondary" disabled={activeQuestionIndex >= activeQuiz.questions.length - 1} onClick={onNextQuestion}>
                   Next
                 </button>
-                <button className="secondary" onClick={onAdaptiveNext} disabled={!quizAdaptiveMode}>Adaptive next</button>
+                <button
+                  className="secondary"
+                  onClick={onAdaptiveNext}
+                  disabled={!quizAdaptiveMode}
+                  title="Choose the next unanswered question closest to your current skill band"
+                >
+                  Next (adaptive)
+                </button>
                 <button className="primary" onClick={onSubmitQuiz}>Submit quiz</button>
               </div>
             </div>
@@ -650,7 +720,7 @@ export function AssessmentRuntimePanel(props: AssessmentRuntimePanelProps) {
         </>
       ) : null}
 
-      {quizStatus ? <p className="status">{quizStatus}</p> : null}
+      {quizStatus ? <p className="status" role="status" aria-live="polite">{quizStatus}</p> : null}
       {selectedQuizTitle ? <p className="compact-line">Selected bank: {selectedQuizTitle}</p> : null}
     </article>
   );

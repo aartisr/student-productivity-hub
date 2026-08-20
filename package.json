@@ -2,7 +2,7 @@
   "name": "student-productivity-hub",
   "version": "0.1.0",
   "description": "A mobile-first study operating system with authentication, planning, and quiz workflows.",
-  "private": true,
+  "private": false,
   "author": "Aarti Sri Ravikumar",
   "license": "MIT",
   "repository": {

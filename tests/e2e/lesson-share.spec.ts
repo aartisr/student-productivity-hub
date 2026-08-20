@@ -3,12 +3,17 @@ import { expect, test, type Page } from "@playwright/test";
 const STORAGE_KEY = "student-productivity-hub-v1";
 
 async function loginAsDemoUser(page: Page) {
+  await page.route("**/api/auth/session", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        user: { name: "Demo Student", email: "demo@studenthub.app", role: "student", id: "student-1" },
+        expires: "2099-01-01T00:00:00.000Z",
+      }),
+    });
+  });
   await page.goto("/");
-  await page.getByRole("button", { name: "Auth", exact: true }).click();
-  const authPanel = page.locator("article.panel").filter({ has: page.getByRole("heading", { name: "Identity & Access" }) });
-  await authPanel.getByPlaceholder("you@example.com").fill("demo@studenthub.app");
-  await authPanel.getByPlaceholder("password").first().fill("demo123");
-  await authPanel.getByRole("button", { name: "Login", exact: true }).click();
   await expect(page.getByText("demo@studenthub.app")).toBeVisible();
 }
 
@@ -21,7 +26,8 @@ test.describe("Lesson Studio and Share Exchange", () => {
 
   test("creates, updates, and deletes a lesson", async ({ page }) => {
     await loginAsDemoUser(page);
-    await page.getByRole("button", { name: "Quiz Lab" }).click();
+    await page.getByRole("button", { name: "Quiz Lab", exact: true }).click();
+    await page.getByRole("button", { name: "Import, export, and share", exact: true }).click();
 
     const lessonPanel = page.locator("article.panel").filter({ has: page.getByRole("heading", { name: "Lesson Studio" }) });
     const lessonTitle = `Playwright Lesson ${Date.now()}`;
@@ -52,7 +58,8 @@ test.describe("Lesson Studio and Share Exchange", () => {
 
   test("shares and re-imports a bundle with lessons and quiz banks", async ({ page }) => {
     await loginAsDemoUser(page);
-    await page.getByRole("button", { name: "Quiz Lab" }).click();
+    await page.getByRole("button", { name: "Quiz Lab", exact: true }).click();
+    await page.getByRole("button", { name: "Create a quiz", exact: true }).click();
 
     const builderPanel = page.locator("article.panel").filter({ has: page.getByRole("heading", { name: "Question Bank Builder" }) });
     const lessonPanel = page.locator("article.panel").filter({ has: page.getByRole("heading", { name: "Lesson Studio" }) });
@@ -69,6 +76,7 @@ test.describe("Lesson Studio and Share Exchange", () => {
     await builderPanel.getByRole("button", { name: "Save bank", exact: true }).click();
     await expect(page.getByText(`Saved quiz bank: ${quizTitle}.`)).toBeVisible();
 
+    await page.getByRole("button", { name: "Import, export, and share", exact: true }).click();
     await lessonPanel.getByPlaceholder("Cell Biology Fundamentals").fill(lessonTitle);
     await lessonPanel
       .getByPlaceholder("Explain concepts, worked examples, and reflection prompts...")
@@ -76,18 +84,24 @@ test.describe("Lesson Studio and Share Exchange", () => {
     await lessonPanel.getByRole("button", { name: "Save lesson", exact: true }).click();
     await expect(page.getByText(`Lesson saved: ${lessonTitle}.`)).toBeVisible();
 
+    await page.getByRole("button", { name: "Import, export, and share", exact: true }).click();
+
     await sharePanel.getByRole("button", { name: "Generate share pack", exact: true }).click();
     await expect(page.getByText("Prepared bundle share pack.")).toBeVisible();
 
-    const payloadField = sharePanel.getByPlaceholder("Copy this payload and share it, or paste a received payload and import");
-    const payload = await payloadField.inputValue();
+    const generatedPayload = sharePanel.getByPlaceholder("Your generated share pack will appear here");
+    await expect(generatedPayload).toHaveAttribute("readonly", "");
+    const payload = await generatedPayload.inputValue();
     expect(payload).toContain(lessonTitle);
     expect(payload).toContain(quizTitle);
+    await expect(sharePanel.getByRole("button", { name: "Copy generated pack", exact: true })).toBeEnabled();
 
-    await sharePanel.getByRole("button", { name: "Import share pack", exact: true }).click();
+    await sharePanel.getByPlaceholder("Paste a share pack from another student").fill(payload);
+    await sharePanel.getByRole("button", { name: "Import received pack", exact: true }).click();
     await expect(page.getByText("Imported 1 lesson(s) and 1 quiz bank(s) from share pack.")).toBeVisible();
 
     await expect(lessonPanel.getByText(`${lessonTitle} (2)`)).toBeVisible();
+    await page.getByRole("button", { name: "Take a quiz", exact: true }).click();
     const banksPanel = page.locator("article.panel").filter({ has: page.getByRole("heading", { name: "Quiz Banks" }) });
     await expect(banksPanel.getByText(`${quizTitle} (2)`)).toBeVisible();
   });

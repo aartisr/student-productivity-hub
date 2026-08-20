@@ -1,0 +1,684 @@
+/* ============================================================================
+   VIRAL GAMIFICATION STYLES
+   Styles for streaks, achievements, leaderboards, and social features
+   ============================================================================ */
+
+/* Streak Card */
+.streak-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #fbbf24 0%, #f97316 100%);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(249, 115, 22, 0.3);
+  animation: streak-pulse 2s ease-in-out infinite;
+}
+
+@keyframes streak-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.streak-card__flame {
+  font-size: 48px;
+  margin-bottom: 12px;
+  animation: flame-flicker 1.5s ease-in-out infinite;
+}
+
+@keyframes flame-flicker {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.05) rotate(2deg);
+  }
+  75% {
+    transform: scale(0.95) rotate(-2deg);
+  }
+}
+
+.streak-card__value {
+  font-size: 48px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.streak-card__label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+}
+
+.streak-card__progress {
+  margin-top: 16px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.streak-card__progress-bar {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+/* Achievement Badge Grid */
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.achievement-badge {
+  position: relative;
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+  box-shadow: 0 8px 16px rgba(99, 102, 241, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.achievement-badge:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(99, 102, 241, 0.4);
+}
+
+.achievement-badge.rare {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.achievement-badge.epic {
+  background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  animation: epic-glow 2s ease-in-out infinite;
+}
+
+.achievement-badge.legendary {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  animation: legendary-glow 1.5s ease-in-out infinite;
+}
+
+@keyframes epic-glow {
+  0%, 100% {
+    box-shadow: 0 8px 16px rgba(249, 115, 22, 0.2);
+  }
+  50% {
+    box-shadow: 0 12px 24px rgba(249, 115, 22, 0.5);
+  }
+}
+
+@keyframes legendary-glow {
+  0%, 100% {
+    box-shadow: 0 8px 16px rgba(251, 191, 36, 0.3);
+  }
+  50% {
+    box-shadow: 0 12px 28px rgba(251, 191, 36, 0.6);
+  }
+}
+
+.achievement-badge__icon {
+  font-size: 32px;
+  margin-bottom: 4px;
+}
+
+.achievement-badge__name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.achievement-badge__share-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 28px;
+  height: 28px;
+  background: #3b82f6;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.achievement-badge:hover .achievement-badge__share-btn {
+  opacity: 1;
+}
+
+/* Leaderboard */
+.leaderboard {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+}
+
+.leaderboard__entry {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background 0.2s ease;
+}
+
+.leaderboard__entry:hover {
+  background: #f9fafb;
+}
+
+.leaderboard__entry:nth-child(1) {
+  background: linear-gradient(90deg, rgba(251, 191, 36, 0.1) 0%, transparent 100%);
+}
+
+.leaderboard__entry:nth-child(2) {
+  background: linear-gradient(90deg, rgba(209, 213, 219, 0.1) 0%, transparent 100%);
+}
+
+.leaderboard__entry:nth-child(3) {
+  background: linear-gradient(90deg, rgba(249, 115, 22, 0.1) 0%, transparent 100%);
+}
+
+.leaderboard__rank {
+  font-size: 18px;
+  font-weight: 900;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-align: center;
+}
+
+.leaderboard__entry:nth-child(1) .leaderboard__rank {
+  background: #fbbf24;
+}
+
+.leaderboard__entry:nth-child(2) .leaderboard__rank {
+  background: #d1d5db;
+}
+
+.leaderboard__entry:nth-child(3) .leaderboard__rank {
+  background: #f97316;
+}
+
+.leaderboard__rank.other {
+  background: #9ca3af;
+}
+
+.leaderboard__name {
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 2px;
+}
+
+.leaderboard__stat {
+  font-size: 12px;
+  color: #666;
+}
+
+.leaderboard__score {
+  font-size: 16px;
+  font-weight: 700;
+  color: #4f46e5;
+}
+
+/* Social Proof Banner */
+.social-proof {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  border-radius: 12px;
+  padding: 24px;
+  color: #fff;
+  border-left: 4px solid #fbbf24;
+  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2);
+}
+
+.social-proof__title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.social-proof__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 12px;
+}
+
+.social-proof__stat {
+  text-align: center;
+}
+
+.social-proof__value {
+  font-size: 28px;
+  font-weight: 900;
+  color: #fbbf24;
+}
+
+.social-proof__label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 4px;
+}
+
+/* Referral Panel */
+.referral-panel {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-radius: 12px;
+  padding: 24px;
+  color: #fff;
+  border: 2px solid #34d399;
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
+}
+
+.referral-panel__title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.referral-panel__description {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.referral-panel__input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.referral-panel__input {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 12px;
+  color: #666;
+  background: #fff;
+}
+
+.referral-panel__copy-btn {
+  padding: 10px 16px;
+  background: #059669;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.referral-panel__copy-btn:hover {
+  background: #047857;
+  transform: translateY(-2px);
+}
+
+.referral-panel__stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.referral-panel__stat-box {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+}
+
+.referral-panel__stat-value {
+  font-size: 24px;
+  font-weight: 900;
+  color: #34d399;
+}
+
+.referral-panel__stat-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 4px;
+}
+
+/* Study Groups */
+.study-groups {
+  display: grid;
+  gap: 12px;
+}
+
+.study-group {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.study-group:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+}
+
+.study-group__info h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 2px;
+}
+
+.study-group__info p {
+  font-size: 12px;
+  color: #666;
+}
+
+.study-group__members {
+  font-size: 12px;
+  font-weight: 600;
+  color: #3b82f6;
+  margin-top: 2px;
+}
+
+.study-group__join-btn {
+  padding: 6px 12px;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.study-group__join-btn:hover {
+  background: #2563eb;
+}
+
+/* Shareable Progress Card */
+.progress-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 24px;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  animation: gradient-shift 10s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-20px, -20px);
+  }
+}
+
+.progress-card__content {
+  position: relative;
+  z-index: 1;
+}
+
+.progress-card__emoji {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.progress-card__title {
+  font-size: 24px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.progress-card__description {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.progress-card__share-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.progress-card__share-btn {
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.progress-card__share-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Viral Metrics Grid */
+.viral-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.metric-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.metric-card.streak {
+  background: linear-gradient(135deg, #fbbf24 0%, #f97316 100%);
+  color: #fff;
+}
+
+.metric-card.achievement {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: #fff;
+}
+
+.metric-card.quiz {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: #fff;
+}
+
+.metric-card.referral {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #fff;
+}
+
+.metric-card__value {
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.metric-card__label {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  opacity: 0.95;
+}
+
+.metric-card__button {
+  width: 100%;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 12px;
+}
+
+.metric-card__button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Share Buttons */
+.share-button-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+.share-button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.share-button.twitter {
+  background: #1da1f2;
+  color: #fff;
+}
+
+.share-button.linkedin {
+  background: #0a66c2;
+  color: #fff;
+}
+
+.share-button.copy {
+  background: #6b7280;
+  color: #fff;
+}
+
+.share-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Animations */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-pulse {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+.animate-slide-in {
+  animation: slide-in-right 0.6s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .viral-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .achievement-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .progress-card {
+    padding: 16px;
+  }
+
+  .progress-card__emoji {
+    font-size: 36px;
+  }
+
+  .progress-card__title {
+    font-size: 18px;
+  }
+
+  .progress-card__share-buttons {
+    gap: 6px;
+  }
+
+  .progress-card__share-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}

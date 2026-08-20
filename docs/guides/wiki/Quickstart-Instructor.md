@@ -1,5 +1,7 @@
 # Quickstart (Instructor)
 
+> **Live workspace:** [Open Student Productivity Hub](https://sph.ai-aarti.com/).
+
 This one-page guide helps instructors run teaching workflows quickly.
 
 ## 0 to 2 Minutes: Sign In and Confirm Role

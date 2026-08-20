@@ -1,5 +1,7 @@
 # Quiz Lab Guide
 
+> **Live workspace:** [Open Student Productivity Hub](https://sph.ai-aarti.com/).
+
 Quiz Lab is the most advanced module in the app.
 
 ## What Quiz Lab Includes

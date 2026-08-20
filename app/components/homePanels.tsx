@@ -22,6 +22,67 @@ export function CommandCenterPanel(props: CommandCenterPanelProps) {
   );
 }
 
+export type HomeWorkspace = "today" | "progress" | "community" | "customize";
+
+type HomeWorkspaceNavigationProps = {
+  activeWorkspace: HomeWorkspace;
+  onSelectWorkspace: (workspace: HomeWorkspace) => void;
+  canCustomize: boolean;
+};
+
+export function HomeWorkspaceNavigation(props: HomeWorkspaceNavigationProps) {
+  const { activeWorkspace, onSelectWorkspace, canCustomize } = props;
+  const workspaces: Array<{ key: HomeWorkspace; label: string; detail: string }> = [
+    { key: "today", label: "Today", detail: "Plan and act" },
+    { key: "progress", label: "Progress", detail: "Review momentum" },
+    { key: "community", label: "Community", detail: "Learn together" },
+    ...(canCustomize ? [{ key: "customize" as HomeWorkspace, label: "Customize", detail: "Shape your workspace" }] : []),
+  ];
+
+  return (
+    <section className="home-workspace-switcher" aria-label="Home workspace">
+      <div className="home-workspace-heading">
+        <span>Workspace</span>
+        <strong>{workspaces.find((workspace) => workspace.key === activeWorkspace)?.detail}</strong>
+      </div>
+      <nav className="home-workspace-nav" aria-label="Home dashboard views">
+        {workspaces.map((workspace) => {
+          const selected = activeWorkspace === workspace.key;
+          return (
+            <button
+              key={workspace.key}
+              className={selected ? "active" : ""}
+              aria-current={selected ? "page" : undefined}
+              onClick={() => onSelectWorkspace(workspace.key)}
+              onKeyDown={(event) => {
+                const keys = ["ArrowLeft", "ArrowRight", "Home", "End"];
+                if (!keys.includes(event.key)) return;
+
+                event.preventDefault();
+                const currentIndex = workspaces.findIndex((item) => item.key === workspace.key);
+                const nextIndex =
+                  event.key === "ArrowLeft"
+                    ? (currentIndex - 1 + workspaces.length) % workspaces.length
+                    : event.key === "ArrowRight"
+                      ? (currentIndex + 1) % workspaces.length
+                      : event.key === "Home"
+                        ? 0
+                        : workspaces.length - 1;
+                const nextWorkspace = workspaces[nextIndex];
+                onSelectWorkspace(nextWorkspace.key);
+                (event.currentTarget.parentElement?.querySelectorAll("button")[nextIndex] as HTMLButtonElement | undefined)?.focus();
+              }}
+            >
+              <span>{workspace.label}</span>
+              <small>{workspace.detail}</small>
+            </button>
+          );
+        })}
+      </nav>
+    </section>
+  );
+}
+
 type OnboardingPanelProps = {
   isSignedIn: boolean;
   hasAssignments: boolean;
@@ -335,7 +396,7 @@ export function ModuleWorkspacePanel(props: ModuleWorkspacePanelProps) {
           <div className="btn-row mt-8">
             <button className="warn" onClick={onResetModuleLayout}>Reset module layout</button>
           </div>
-          {moduleStatus ? <p className="status">{moduleStatus}</p> : null}
+          {moduleStatus ? <p className="status" role="status" aria-live="polite">{moduleStatus}</p> : null}
         </>
       ) : (
         <p className="compact-line">Sign in to save your module layout and default workspace.</p>

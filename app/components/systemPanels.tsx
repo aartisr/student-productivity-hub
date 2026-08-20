@@ -35,16 +35,16 @@ function SettingsEditor({ settings, onSave }: SettingsEditorProps) {
     <div>
       <h3>Settings</h3>
       <div className="form-row">
-        <label>Display name</label>
-        <input title="Display name" placeholder="Your display name" value={name} onChange={(e) => setName(e.target.value)} />
+        <label htmlFor="display-name">Display name</label>
+        <input id="display-name" placeholder="Your display name" value={name} onChange={(e) => setName(e.target.value)} />
       </div>
       <div className="form-row">
-        <label>Study minutes</label>
-        <input title="Study minutes" placeholder="25" type="number" value={study} onChange={(e) => setStudy(Number(e.target.value))} />
+        <label htmlFor="study-minutes">Study minutes</label>
+        <input id="study-minutes" placeholder="25" type="number" value={study} onChange={(e) => setStudy(Number(e.target.value))} />
       </div>
       <div className="form-row">
-        <label>Break minutes</label>
-        <input title="Break minutes" placeholder="5" type="number" value={brk} onChange={(e) => setBrk(Number(e.target.value))} />
+        <label htmlFor="break-minutes">Break minutes</label>
+        <input id="break-minutes" placeholder="5" type="number" value={brk} onChange={(e) => setBrk(Number(e.target.value))} />
       </div>
       <button className="primary" onClick={() => onSave(name, study, brk)}>Save settings</button>
     </div>
@@ -81,39 +81,70 @@ export function BackupPanel(props: BackupPanelProps) {
     onRestoreBackup,
     onSaveSettings,
   } = props;
+  const [workspace, setWorkspace] = useState<"transfer" | "backups" | "settings">("transfer");
 
   return (
     <article className="panel">
       <h2>Export, Import & Backups</h2>
-      <div className="btn-row">
-        <button className="primary" onClick={onGenerateExport}>Generate export JSON</button>
-        <button className="secondary" onClick={onImport}>Import JSON</button>
-        <button className="warn" onClick={onCreateBackup}>Create backup</button>
-      </div>
-
-      <div className="form-row mt-8">
-        <label>Export payload</label>
-        <textarea value={exportText} onChange={(e) => setExportText(e.target.value)} placeholder="Click generate export" />
-      </div>
-      <div className="form-row">
-        <label>Import payload</label>
-        <textarea value={importText} onChange={(e) => setImportText(e.target.value)} placeholder="Paste snapshot JSON and click import" />
-      </div>
-      <div className="status">{backupStatus}</div>
-
-      <ul className="list">
-        {backups.map((backup, index) => (
-          <li key={`${backup.createdAt}-${index}`}>
-            {new Date(backup.createdAt).toLocaleString()}
-            <div className="btn-row mt-6">
-              <button className="secondary" onClick={() => onRestoreBackup(index)}>Restore</button>
-            </div>
-          </li>
+      <nav className="backup-workspace-nav" aria-label="Data and settings tasks">
+        {[
+          ["transfer", "Export or import"],
+          ["backups", "Backups"],
+          ["settings", "Preferences"],
+        ].map(([key, label]) => (
+          <button
+            key={key}
+            className={workspace === key ? "active" : ""}
+            aria-current={workspace === key ? "page" : undefined}
+            onClick={() => setWorkspace(key as "transfer" | "backups" | "settings")}
+          >
+            {label}
+          </button>
         ))}
-      </ul>
+      </nav>
 
-      <hr />
-      <SettingsEditor settings={settings} onSave={onSaveSettings} />
+      {workspace === "transfer" && (
+        <>
+          <p className="compact-line">Move your study data safely between devices with a portable JSON file.</p>
+          <div className="btn-row mt-8">
+            <button className="primary" onClick={onGenerateExport}>Generate export JSON</button>
+            <button className="secondary" onClick={onImport}>Import JSON</button>
+          </div>
+          <div className="form-row mt-8">
+            <label htmlFor="export-payload">Export payload</label>
+            <textarea id="export-payload" value={exportText} onChange={(e) => setExportText(e.target.value)} placeholder="Click generate export" />
+          </div>
+          <div className="form-row">
+            <label htmlFor="import-payload">Import payload</label>
+            <textarea id="import-payload" value={importText} onChange={(e) => setImportText(e.target.value)} placeholder="Paste snapshot JSON and click import" />
+          </div>
+        </>
+      )}
+
+      {workspace === "backups" && (
+        <>
+          <p className="compact-line">Save a restore point before making significant changes.</p>
+          <div className="btn-row mt-8">
+            <button className="warn" onClick={onCreateBackup}>Create backup</button>
+          </div>
+          {backups.length ? (
+            <ul className="list">
+              {backups.map((backup, index) => (
+                <li key={`${backup.createdAt}-${index}`}>
+                  {new Date(backup.createdAt).toLocaleString()}
+                  <div className="btn-row mt-6">
+                    <button className="secondary" onClick={() => onRestoreBackup(index)}>Restore this backup</button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : <p className="compact-line">No saved backups yet.</p>}
+        </>
+      )}
+
+      {workspace === "settings" && <SettingsEditor settings={settings} onSave={onSaveSettings} />}
+
+      {backupStatus ? <div className="status" role="status" aria-live="polite">{backupStatus}</div> : null}
     </article>
   );
 }

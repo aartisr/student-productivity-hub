@@ -1,5 +1,7 @@
 # Troubleshooting
 
+> **Live workspace:** [Open Student Productivity Hub](https://sph.ai-aarti.com/).
+
 ## OAuth Button Not Visible
 
 Possible causes:

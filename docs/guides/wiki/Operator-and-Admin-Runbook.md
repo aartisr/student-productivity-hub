@@ -1,5 +1,7 @@
 # Operator and Admin Runbook
 
+> **Live workspace:** [Open Student Productivity Hub](https://sph.ai-aarti.com/).
+
 Use this runbook for environment setup, role governance, validation, and incident response.
 
 ## Scope

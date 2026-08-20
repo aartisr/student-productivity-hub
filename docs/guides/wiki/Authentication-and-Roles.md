@@ -1,5 +1,7 @@
 # Authentication and Roles
 
+> **Live workspace:** [Open Student Productivity Hub](https://sph.ai-aarti.com/).
+
 This application uses Auth.js (NextAuth) with provider federation.
 
 ## Supported OAuth Providers

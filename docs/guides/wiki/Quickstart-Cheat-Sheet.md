@@ -1,5 +1,7 @@
 # Quickstart Cheat Sheet (Printable)
 
+> **Live workspace:** [Open Student Productivity Hub](https://sph.ai-aarti.com/).
+
 Use this single-page guide to pick your role flow and start fast.
 
 ## Role Selection

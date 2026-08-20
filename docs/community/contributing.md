@@ -99,6 +99,6 @@ If your change supports a research hypothesis:
 
 ## Communication and Conduct
 
-By participating, you agree to follow the project Code of Conduct in [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+By participating, you agree to follow the project [Code of Conduct](code-of-conduct.md).
 
 Questions and proposals are welcome through GitHub issues and pull requests.

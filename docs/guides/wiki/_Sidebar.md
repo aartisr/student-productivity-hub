@@ -1,6 +1,8 @@
 # Wiki Navigation
 
 - [Home](Home.md)
+- [Project Story and Thanks](Project-Story-and-Thanks.md)
+- [Community and Canonical Site](Community-and-Canonical-Site.md)
 - [Getting Started](Getting-Started.md)
 - [Quickstart Cheat Sheet](Quickstart-Cheat-Sheet.md)
 - [Quickstart Wall Poster](Quickstart-Wall-Poster.md)
@@ -11,6 +13,7 @@
 - [Quiz Lab Guide](Quiz-Lab-Guide.md)
 - [Data Backup and Import](Data-Backup-and-Import.md)
 - [Operator and Admin Runbook](Operator-and-Admin-Runbook.md)
+- [Vercel Deployment Guide](Vercel-Deployment.md)
 - [Release Gates and Incident SLA](Release-Gates-and-SLA.md)
 - [Troubleshooting](Troubleshooting.md)
 - [FAQ](FAQ.md)

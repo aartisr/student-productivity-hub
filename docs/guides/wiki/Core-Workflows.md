@@ -1,5 +1,7 @@
 # Core Workflows
 
+> **Live workspace:** [Open Student Productivity Hub](https://sph.ai-aarti.com/).
+
 This page covers practical day-to-day usage patterns.
 
 ## Workflow 1: Plan Your Day

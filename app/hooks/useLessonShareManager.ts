@@ -26,8 +26,9 @@ type UseLessonShareManagerArgs = {
   shareKind: "lesson" | "quiz" | "bundle";
   shareLessonId: string;
   shareQuizId: string;
-  sharePayload: string;
-  setSharePayload: (value: string) => void;
+  generatedSharePayload: string;
+  setGeneratedSharePayload: (value: string) => void;
+  importSharePayload: string;
   setShareStatus: (value: string) => void;
 };
 
@@ -56,8 +57,9 @@ export function useLessonShareManager(args: UseLessonShareManagerArgs) {
     shareKind,
     shareLessonId,
     shareQuizId,
-    sharePayload,
-    setSharePayload,
+    generatedSharePayload,
+    setGeneratedSharePayload,
+    importSharePayload,
     setShareStatus,
   } = args;
 
@@ -166,13 +168,27 @@ export function useLessonShareManager(args: UseLessonShareManagerArgs) {
       return;
     }
 
-    setSharePayload(JSON.stringify(pack, null, 2));
+    setGeneratedSharePayload(JSON.stringify(pack, null, 2));
     setShareStatus(`Prepared ${shareKind} share pack.`);
+  };
+
+  const copyGeneratedSharePack = async () => {
+    if (!generatedSharePayload) {
+      setShareStatus("Generate a share pack before copying it.");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(generatedSharePayload);
+      setShareStatus("Share pack copied to your clipboard.");
+    } catch {
+      setShareStatus("Unable to copy in this browser. Select the generated pack and copy it manually.");
+    }
   };
 
   const importSharePack = () => {
     if (!ensureSignedIn()) return;
-    const raw = sharePayload.trim();
+    const raw = importSharePayload.trim();
     if (!raw) {
       setShareStatus("Paste a share pack payload to import.");
       return;
@@ -241,6 +257,7 @@ export function useLessonShareManager(args: UseLessonShareManagerArgs) {
     editLesson,
     deleteLesson,
     generateSharePack,
+    copyGeneratedSharePack,
     importSharePack,
   };
 }

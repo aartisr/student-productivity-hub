@@ -4,10 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   buildProviderCompatibility,
   PROVIDER_PROFILES,
-  type ImportFormat,
-  type QuestionKind,
   type QuizBank,
-  type QuizQuestion,
 } from "./quizEngine";
 import {
   LMS_CONNECTORS,
@@ -44,10 +41,11 @@ import {
   type ViewKey,
 } from "./domain";
 import { loadAppData, saveAppData } from "./persistence";
-import { AccessDeniedPanel, AssignmentsPanel, AuthPanel, PlannerPanel } from "./components/corePanels";
-import { CommandCenterPanel, ModuleWorkspacePanel, OnboardingPanel, WorkloadRiskPanel } from "./components/homePanels";
+import { AccessDeniedPanel, AppNavigation, AssignmentsPanel, AuthPanel, PlannerPanel } from "./components/corePanels";
+import { CommandCenterPanel, HomeWorkspaceNavigation, ModuleWorkspacePanel, OnboardingPanel, WorkloadRiskPanel, type HomeWorkspace } from "./components/homePanels";
+import { AchievementsPanel, LeaderboardPanel, ReferralPanel, SocialProofBanner, StreakCard, StudyGroupsPanel } from "./components/gamificationPanels";
 import { AnalyticsPanel, GpaPanel, TimerPanel } from "./components/progressPanels";
-import { AssessmentRuntimePanel, CompatibilityTargetsPanel, InstructorModePanel, LessonStudioPanel, LmsConnectorPanel, QuestionBankBuilderPanel, QuizAdapterPanel, QuizBanksPanel, QuizOverviewPanel, ShareExchangePanel } from "./components/quizPanels";
+import { AssessmentRuntimePanel, CompatibilityTargetsPanel, InstructorModePanel, LessonStudioPanel, LmsConnectorPanel, QuestionBankBuilderPanel, QuizAdapterPanel, QuizBanksPanel, QuizLabNavigation, QuizOverviewPanel, ShareExchangePanel } from "./components/quizPanels";
 import { BackupPanel, MotivationPanel, StudyCoachPanel } from "./components/systemPanels";
 import { useAuthManager } from "./hooks/useAuthManager";
 import { useSystemManager } from "./hooks/useSystemManager";
@@ -55,6 +53,7 @@ import { useWorkManager } from "./hooks/useWorkManager";
 import { useQuizInsights } from "./hooks/useQuizInsights";
 import { useQuizBankManager } from "./hooks/useQuizBankManager";
 import { useQuizRuntime } from "./hooks/useQuizRuntime";
+import { useQuizLabState } from "./hooks/useQuizLabState";
 import { useLessonShareManager } from "./hooks/useLessonShareManager";
 import { useModuleProfileManager } from "./hooks/useModuleProfileManager";
 import { useCoachManager } from "./hooks/useCoachManager";
@@ -62,6 +61,7 @@ import { useCoachManager } from "./hooks/useCoachManager";
 export default function Page() {
   const [ready, setReady] = useState(false);
   const [view, setView] = useState<ViewKey>("home");
+  const [homeWorkspace, setHomeWorkspace] = useState<HomeWorkspace>("today");
   const [previewMode, setPreviewMode] = useState<PreviewMode>("auto");
   const [store, setStore] = useState<AppData>(defaultData);
   const [authMsg, setAuthMsg] = useState("");
@@ -88,7 +88,8 @@ export default function Page() {
   const [shareKind, setShareKind] = useState<"lesson" | "quiz" | "bundle">("bundle");
   const [shareLessonId, setShareLessonId] = useState("");
   const [shareQuizId, setShareQuizId] = useState("");
-  const [sharePayload, setSharePayload] = useState("");
+  const [generatedSharePayload, setGeneratedSharePayload] = useState("");
+  const [importSharePayload, setImportSharePayload] = useState("");
   const [shareStatus, setShareStatus] = useState("");
 
   const [timerMode, setTimerMode] = useState<"study" | "break">("study");
@@ -98,22 +99,6 @@ export default function Page() {
 
   const [gInputs, setGInputs] = useState(["", "", "", ""]);
   const [gpaText, setGpaText] = useState("");
-  const [quizTitle, setQuizTitle] = useState("General Mastery Quiz");
-  const [quizSubject, setQuizSubject] = useState("General");
-  const [quizDifficulty, setQuizDifficulty] = useState("mixed");
-  const [quizPrompt, setQuizPrompt] = useState("");
-  const [quizKind, setQuizKind] = useState<QuestionKind>("single");
-  const [quizQuestionDifficulty, setQuizQuestionDifficulty] = useState(3);
-  const [quizChoicesText, setQuizChoicesText] = useState("");
-  const [quizCorrectText, setQuizCorrectText] = useState("");
-  const [quizExplanation, setQuizExplanation] = useState("");
-  const [quizDraftQuestions, setQuizDraftQuestions] = useState<QuizQuestion[]>([]);
-  const [quizTargets, setQuizTargets] = useState<string[]>(PROVIDER_PROFILES.map((provider) => provider.id));
-  const [quizImportFormat, setQuizImportFormat] = useState<ImportFormat>("auto");
-  const [quizImportText, setQuizImportText] = useState("");
-  const [quizExportFormat, setQuizExportFormat] = useState<Exclude<ImportFormat, "auto">>("generic-json");
-  const [quizExportText, setQuizExportText] = useState("");
-  const [quizStatus, setQuizStatus] = useState("");
   const [energyLevel, setEnergyLevel] = useState(3);
   const [availableMinutes, setAvailableMinutes] = useState(60);
   const [coachPlan, setCoachPlan] = useState("");
@@ -127,6 +112,43 @@ export default function Page() {
   const [customProfilesTransferText, setCustomProfilesTransferText] = useState("");
   const [customProfilesImportMode, setCustomProfilesImportMode] = useState<"replace" | "merge">("replace");
   const [customProfileConflictMode, setCustomProfileConflictMode] = useState<"rename" | "overwrite" | "skip">("rename");
+
+  const {
+    quizWorkspace,
+    setQuizWorkspace,
+    quizTitle,
+    setQuizTitle,
+    quizSubject,
+    setQuizSubject,
+    quizDifficulty,
+    setQuizDifficulty,
+    quizPrompt,
+    setQuizPrompt,
+    quizKind,
+    setQuizKind,
+    quizQuestionDifficulty,
+    setQuizQuestionDifficulty,
+    quizChoicesText,
+    setQuizChoicesText,
+    quizCorrectText,
+    setQuizCorrectText,
+    quizExplanation,
+    setQuizExplanation,
+    quizDraftQuestions,
+    setQuizDraftQuestions,
+    quizTargets,
+    setQuizTargets,
+    quizImportFormat,
+    setQuizImportFormat,
+    quizImportText,
+    setQuizImportText,
+    quizExportFormat,
+    setQuizExportFormat,
+    quizExportText,
+    setQuizExportText,
+    quizStatus,
+    setQuizStatus,
+  } = useQuizLabState();
 
   useEffect(() => {
     setStore(loadAppData(STORAGE_KEY));
@@ -413,6 +435,7 @@ export default function Page() {
     editLesson,
     deleteLesson,
     generateSharePack,
+    copyGeneratedSharePack,
     importSharePack,
   } = useLessonShareManager({
     ensureSignedIn,
@@ -438,8 +461,9 @@ export default function Page() {
     shareKind,
     shareLessonId,
     shareQuizId,
-    sharePayload,
-    setSharePayload,
+    generatedSharePayload,
+    setGeneratedSharePayload,
+    importSharePayload,
     setShareStatus,
   });
 
@@ -519,6 +543,50 @@ export default function Page() {
       }),
     [assignments],
   );
+
+  const streakInfo = currentUser ? store.streaks?.[currentUser] : undefined;
+
+  const userAchievements = useMemo(
+    () => (currentUser ? (store.achievements || []).filter((item) => item.userId === currentUser) : []),
+    [currentUser, store.achievements],
+  );
+
+  const leaderboardEntries = useMemo(() => {
+    const rows = store.leaderboard || [];
+    return [...rows].sort((a, b) => {
+      if (a.rank > 0 && b.rank > 0 && a.rank !== b.rank) return a.rank - b.rank;
+      return b.score - a.score;
+    });
+  }, [store.leaderboard]);
+
+  const referralInfo = currentUser ? store.referrals?.[currentUser] : undefined;
+
+  const visibleStudyGroups = useMemo(
+    () => (store.studyGroups || []).filter((group) => group.isPublic || (currentUser ? group.members.includes(currentUser) : false)),
+    [store.studyGroups, currentUser],
+  );
+
+  const lastQuizScore = quizAttempts.length ? quizAttempts[quizAttempts.length - 1].percent : 0;
+
+  const leaderboardRank = useMemo(() => {
+    if (!currentUser) return undefined;
+    const direct = leaderboardEntries.find((entry) => entry.userId === currentUser);
+    return direct?.rank || undefined;
+  }, [currentUser, leaderboardEntries]);
+
+  const socialProof = store.socialProof || {
+    totalUsers: 2847,
+    totalStudyHours: 45892,
+    averageStreak: 12,
+    topicsTaught: 156,
+    upcomingEvents: 8,
+  };
+
+  const shareAchievement = (badgeName: string) => {
+    const message = `I unlocked ${badgeName} on Student Productivity Hub. Join me and build your study streak.`;
+    const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`;
+    window.open(tweetUrl, "_blank", "noopener,noreferrer");
+  };
 
   const pendingPlanner = useMemo(() => planner.filter((item) => !item.done), [planner]);
 
@@ -621,103 +689,121 @@ export default function Page() {
   return (
     <main className={`main-shell ${previewMode === "auto" ? "" : `preview-${previewMode}`}`}>
       <a href="#main-content" className="skip-link">Skip to main content</a>
-      <section className="hero">
-        <div className="hero-head">
+      <header className="app-header">
+        <div className="app-brand">
+          <p>Student Productivity</p>
           <h1>Student Productivity Hub</h1>
-          <div className="preview-picker" role="group" aria-label="Device preview mode">
-            <label htmlFor="preview-mode">Preview</label>
-            <select
-              id="preview-mode"
-              title="Preview device viewport"
-              value={previewMode}
-              onChange={(e) => setPreviewMode(e.target.value as PreviewMode)}
-            >
-              <option value="auto">Auto</option>
-              <option value="mobile">Mobile</option>
-              <option value="tablet">Tablet</option>
-              <option value="laptop">Laptop</option>
-              <option value="desktop">Desktop</option>
-            </select>
-          </div>
         </div>
-        <p>Mobile-first study OS inspired by your AppLab architecture: auth, planner, timer, GPA, analytics, and backup lifecycle.</p>
-        <div className="kpi-row">
-          <div className="kpi">
-            <span>Active assignments</span>
-            <strong>{sortedAssignments.filter((x) => !x.completed).length}</strong>
-          </div>
-          <div className="kpi">
-            <span>Planner tasks</span>
-            <strong>{planner.length}</strong>
-          </div>
-          <div className="kpi">
-            <span>Study time</span>
-            <strong>{hhmmss(totals.study)}</strong>
-          </div>
-          <div className="kpi">
-            <span>Current user</span>
+        <div className="app-header-actions">
+          <span className="app-account" aria-label={`Signed in as ${currentUser || "guest"}, role ${role}`}>
             <strong>{currentUser || "Guest"}</strong>
-          </div>
-          <div className="kpi">
-            <span>Role</span>
-            <strong>{role.toUpperCase()}</strong>
-          </div>
+            <small>{role}</small>
+          </span>
+          <details className="workspace-overview">
+            <summary>Overview</summary>
+            <div className="workspace-overview-menu">
+              <div className="workspace-metrics" aria-label="Workspace summary">
+                <span><strong>{sortedAssignments.filter((assignment) => !assignment.completed).length}</strong> active assignments</span>
+                <span><strong>{planner.length}</strong> planner tasks</span>
+                <span><strong>{hhmmss(totals.study)}</strong> focus time</span>
+              </div>
+              <div className="preview-picker" role="group" aria-label="Device preview mode">
+                <label htmlFor="preview-mode">Preview layout</label>
+                <select
+                  id="preview-mode"
+                  value={previewMode}
+                  onChange={(e) => setPreviewMode(e.target.value as PreviewMode)}
+                >
+                  <option value="auto">Auto</option>
+                  <option value="mobile">Mobile</option>
+                  <option value="tablet">Tablet</option>
+                  <option value="laptop">Laptop</option>
+                  <option value="desktop">Desktop</option>
+                </select>
+              </div>
+            </div>
+          </details>
         </div>
-      </section>
+      </header>
 
-      <nav className="nav-tabs" aria-label="Sections">
-        {navModules.map((module) => (
-          <button
-            key={module.key}
-            className={view === module.key ? "active" : ""}
-            aria-current={view === module.key ? "page" : undefined}
-            onClick={() => {
-              if (!currentUser && authRequiredViews.has(module.key)) {
-                setView("auth");
-                setAuthMsg("Sign in to access this module.");
-                return;
-              }
-              setView(module.key);
-            }}
-          >
-            {module.label}
-          </button>
-        ))}
-      </nav>
+      <AppNavigation
+        modules={navModules}
+        activeView={view}
+        onNavigate={(nextView) => {
+          if (!currentUser && authRequiredViews.has(nextView)) {
+            setView("auth");
+            setAuthMsg("Sign in to access this module.");
+            return;
+          }
+          setView(nextView);
+        }}
+      />
 
       <section id="main-content" className="section-grid">
         {view === "home" && (
           <>
-            <OnboardingPanel
-              isSignedIn={Boolean(currentUser)}
-              hasAssignments={assignments.length > 0}
-              hasPlannerTasks={planner.length > 0}
-              hasQuizBanks={quizBanks.length > 0}
-              hasStudySessions={sessions.some((entry) => entry.mode === "study")}
-              onGoAuth={() => setView("auth")}
-              onGoAssignments={() => setView("assignments")}
-              onGoPlanner={() => setView("planner")}
-              onGoQuiz={() => setView("quiz")}
-              onGoTimer={() => setView("timer")}
+            <HomeWorkspaceNavigation
+              activeWorkspace={homeWorkspace}
+              onSelectWorkspace={setHomeWorkspace}
+              canCustomize={Boolean(currentUser)}
             />
 
-            <CommandCenterPanel
-              title={nextStep.title}
-              detail={nextStep.detail}
-              actionLabel={nextStep.actionLabel}
-              onPrimaryAction={nextStep.action}
-              onOpenCoach={() => setView("coach")}
+            <SocialProofBanner
+              totalUsers={socialProof.totalUsers}
+              totalStudyHours={socialProof.totalStudyHours}
+              averageStreak={socialProof.averageStreak}
             />
 
-            <WorkloadRiskPanel
-              overdue={workload.overdue}
-              dueIn3Days={workload.dueIn3Days}
-              dueIn7Days={workload.dueIn7Days}
-              pendingTasks={workload.pendingTasks}
-              riskLevel={workload.riskLevel}
-            />
+            {homeWorkspace === "today" && (
+              <>
+                <CommandCenterPanel
+                  title={nextStep.title}
+                  detail={nextStep.detail}
+                  actionLabel={nextStep.actionLabel}
+                  onPrimaryAction={nextStep.action}
+                  onOpenCoach={() => setView("coach")}
+                />
+                <OnboardingPanel
+                  isSignedIn={Boolean(currentUser)}
+                  hasAssignments={assignments.length > 0}
+                  hasPlannerTasks={planner.length > 0}
+                  hasQuizBanks={quizBanks.length > 0}
+                  hasStudySessions={sessions.some((entry) => entry.mode === "study")}
+                  onGoAuth={() => setView("auth")}
+                  onGoAssignments={() => setView("assignments")}
+                  onGoPlanner={() => setView("planner")}
+                  onGoQuiz={() => setView("quiz")}
+                  onGoTimer={() => setView("timer")}
+                />
+              </>
+            )}
 
-            {currentUser ? (
+            {homeWorkspace === "progress" && (
+              <>
+                <WorkloadRiskPanel
+                  overdue={workload.overdue}
+                  dueIn3Days={workload.dueIn3Days}
+                  dueIn7Days={workload.dueIn7Days}
+                  pendingTasks={workload.pendingTasks}
+                  riskLevel={workload.riskLevel}
+                />
+                <StreakCard streak={streakInfo} />
+                <AchievementsPanel
+                  achievements={userAchievements}
+                  onShare={(achievement) => shareAchievement(achievement.badgeName)}
+                />
+              </>
+            )}
+
+            {homeWorkspace === "community" && (
+              <>
+                <LeaderboardPanel entries={leaderboardEntries} />
+                {currentUser ? <ReferralPanel referral={referralInfo} userEmail={currentUser} /> : null}
+                <StudyGroupsPanel groups={visibleStudyGroups} />
+              </>
+            )}
+
+            {homeWorkspace === "customize" && currentUser ? (
               <ModuleWorkspacePanel
                 currentUser={currentUser}
                 moduleProfiles={MODULE_PROFILES}
@@ -815,37 +901,46 @@ export default function Page() {
               reviewsDueSoon={upcomingReviews.length}
             />
 
-            <CompatibilityTargetsPanel
-              providerProfiles={PROVIDER_PROFILES}
-              selectedTargets={quizTargets}
-              onToggleTarget={toggleQuizTarget}
-            />
+            <QuizLabNavigation activeWorkspace={quizWorkspace} onSelectWorkspace={setQuizWorkspace} />
 
-            <QuestionBankBuilderPanel
-              quizTitle={quizTitle}
-              quizSubject={quizSubject}
-              quizDifficulty={quizDifficulty}
-              quizPrompt={quizPrompt}
-              quizKind={quizKind}
-              quizQuestionDifficulty={quizQuestionDifficulty}
-              quizChoicesText={quizChoicesText}
-              quizCorrectText={quizCorrectText}
-              quizExplanation={quizExplanation}
-              quizDraftQuestions={quizDraftQuestions}
-              setQuizTitle={setQuizTitle}
-              setQuizSubject={setQuizSubject}
-              setQuizDifficulty={setQuizDifficulty}
-              setQuizPrompt={setQuizPrompt}
-              setQuizKind={setQuizKind}
-              setQuizQuestionDifficulty={setQuizQuestionDifficulty}
-              setQuizChoicesText={setQuizChoicesText}
-              setQuizCorrectText={setQuizCorrectText}
-              setQuizExplanation={setQuizExplanation}
-              onAddDraftQuestion={addDraftQuestion}
-              onSaveDraftQuizBank={saveDraftQuizBank}
-            />
+            {quizWorkspace === "create" && (
+              <>
+                <CompatibilityTargetsPanel
+                  providerProfiles={PROVIDER_PROFILES}
+                  selectedTargets={quizTargets}
+                  onToggleTarget={toggleQuizTarget}
+                />
 
-            <QuizAdapterPanel
+                <QuestionBankBuilderPanel
+                  quizTitle={quizTitle}
+                  quizSubject={quizSubject}
+                  quizDifficulty={quizDifficulty}
+                  quizPrompt={quizPrompt}
+                  quizKind={quizKind}
+                  quizQuestionDifficulty={quizQuestionDifficulty}
+                  quizChoicesText={quizChoicesText}
+                  quizCorrectText={quizCorrectText}
+                  quizExplanation={quizExplanation}
+                  quizDraftQuestions={quizDraftQuestions}
+                  quizStatus={quizStatus}
+                  setQuizTitle={setQuizTitle}
+                  setQuizSubject={setQuizSubject}
+                  setQuizDifficulty={setQuizDifficulty}
+                  setQuizPrompt={setQuizPrompt}
+                  setQuizKind={setQuizKind}
+                  setQuizQuestionDifficulty={setQuizQuestionDifficulty}
+                  setQuizChoicesText={setQuizChoicesText}
+                  setQuizCorrectText={setQuizCorrectText}
+                  setQuizExplanation={setQuizExplanation}
+                  onAddDraftQuestion={addDraftQuestion}
+                  onSaveDraftQuizBank={saveDraftQuizBank}
+                />
+              </>
+            )}
+
+            {quizWorkspace === "share" && (
+              <>
+                <QuizAdapterPanel
               quizImportFormat={quizImportFormat}
               quizImportText={quizImportText}
               quizExportFormat={quizExportFormat}
@@ -855,128 +950,61 @@ export default function Page() {
               setQuizExportFormat={setQuizExportFormat}
               setQuizExportText={setQuizExportText}
               onImportQuizBanks={importQuizBanks}
-              onExportSelectedQuiz={exportSelectedQuiz}
+                  onExportSelectedQuiz={exportSelectedQuiz}
+                />
+
+            <LessonStudioPanel
+              lessonDraftId={lessonDraftId}
+              lessonTitle={lessonTitle}
+              lessonTopic={lessonTopic}
+              lessonContent={lessonContent}
+              lessonEstimatedMinutes={lessonEstimatedMinutes}
+              lessonTagsText={lessonTagsText}
+              lessonLinkedQuizIdsText={lessonLinkedQuizIdsText}
+              lessonStatus={lessonStatus}
+              lessons={lessons}
+              setLessonTitle={setLessonTitle}
+              setLessonTopic={setLessonTopic}
+              setLessonContent={setLessonContent}
+              setLessonEstimatedMinutes={setLessonEstimatedMinutes}
+              setLessonTagsText={setLessonTagsText}
+              setLessonLinkedQuizIdsText={setLessonLinkedQuizIdsText}
+              onSaveLesson={saveLesson}
+              onResetLessonForm={resetLessonForm}
+              onEditLesson={editLesson}
+              onDeleteLesson={deleteLesson}
             />
 
-            <article className="panel">
-              <h2>Lesson Studio</h2>
-              <p className="compact-line">Create your own lessons, link them to quiz banks, and personalize learning paths.</p>
-              <div className="form-row">
-                <label>Lesson title</label>
-                <input value={lessonTitle} onChange={(e) => setLessonTitle(e.target.value)} placeholder="Cell Biology Fundamentals" />
-              </div>
-              <div className="form-row">
-                <label>Topic and estimated minutes</label>
-                <div className="btn-row">
-                  <input className="inline-input" value={lessonTopic} onChange={(e) => setLessonTopic(e.target.value)} placeholder="Biology" />
-                  <input
-                    className="inline-input"
-                    title="Estimated lesson minutes"
-                    type="number"
-                    min={5}
-                    max={240}
-                    value={lessonEstimatedMinutes}
-                    onChange={(e) => setLessonEstimatedMinutes(Number(e.target.value) || 20)}
-                  />
-                </div>
-              </div>
-              <div className="form-row">
-                <label>Lesson content</label>
-                <textarea value={lessonContent} onChange={(e) => setLessonContent(e.target.value)} placeholder="Explain concepts, worked examples, and reflection prompts..." />
-              </div>
-              <div className="form-row">
-                <label>Tags (comma-separated)</label>
-                <input value={lessonTagsText} onChange={(e) => setLessonTagsText(e.target.value)} placeholder="revision, chapter-3, exam" />
-              </div>
-              <div className="form-row">
-                <label>Linked quiz bank IDs (comma-separated)</label>
-                <input value={lessonLinkedQuizIdsText} onChange={(e) => setLessonLinkedQuizIdsText(e.target.value)} placeholder="quiz-bank-id-1, quiz-bank-id-2" />
-              </div>
-              <div className="btn-row mt-8">
-                <button className="primary" onClick={saveLesson}>{lessonDraftId ? "Update lesson" : "Save lesson"}</button>
-                <button className="ghost" onClick={() => resetLessonForm("Lesson form reset.")}>
-                  Reset form
-                </button>
-              </div>
-              {lessonStatus ? <p className="status">{lessonStatus}</p> : null}
-
-              <h3 className="mt-8">My Lessons</h3>
-              <ul className="list">
-                {lessons.map((lesson) => (
-                  <li key={lesson.id}>
-                    <strong>{lesson.title}</strong>
-                    <div className="compact-line">{lesson.topic} · {lesson.estimatedMinutes} min · updated {new Date(lesson.updatedAt).toLocaleString()}</div>
-                    <div className="compact-line">Tags: {lesson.tags.length ? lesson.tags.join(", ") : "none"}</div>
-                    <div className="compact-line">Linked quizzes: {lesson.linkedQuizBankIds.length ? lesson.linkedQuizBankIds.join(", ") : "none"}</div>
-                    <div className="btn-row mt-6">
-                      <button className="secondary" onClick={() => editLesson(lesson.id)}>Edit</button>
-                      <button className="ghost" onClick={() => deleteLesson(lesson.id)}>Delete</button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </article>
-
-            <article className="panel">
-              <h2>Share Exchange</h2>
-              <p className="compact-line">Share your custom lessons and quizzes with other users via portable JSON packs.</p>
-              <div className="form-row">
-                <label>Share type</label>
-                <select title="Share pack type" value={shareKind} onChange={(e) => setShareKind(e.target.value as "lesson" | "quiz" | "bundle")}>
-                  <option value="bundle">Bundle (lessons + quizzes)</option>
-                  <option value="lesson">Single lesson</option>
-                  <option value="quiz">Single quiz bank</option>
-                </select>
-              </div>
-
-              {shareKind === "lesson" ? (
-                <div className="form-row">
-                  <label>Select lesson</label>
-                  <select title="Lesson to share" value={shareLessonId} onChange={(e) => setShareLessonId(e.target.value)}>
-                    <option value="">Select lesson</option>
-                    {lessons.map((lesson) => (
-                      <option key={lesson.id} value={lesson.id}>{lesson.title}</option>
-                    ))}
-                  </select>
-                </div>
-              ) : null}
-
-              {shareKind === "quiz" ? (
-                <div className="form-row">
-                  <label>Select quiz bank</label>
-                  <select title="Quiz bank to share" value={shareQuizId} onChange={(e) => setShareQuizId(e.target.value)}>
-                    <option value="">Select quiz bank</option>
-                    {quizBanks.map((bank) => (
-                      <option key={bank.id} value={bank.id}>{bank.title}</option>
-                    ))}
-                  </select>
-                </div>
-              ) : null}
-
-              <div className="btn-row mt-8">
-                <button className="primary" onClick={generateSharePack}>Generate share pack</button>
-                <button className="secondary" onClick={importSharePack}>Import share pack</button>
-              </div>
-
-              <div className="form-row mt-8">
-                <label>Share payload</label>
-                <textarea
-                  value={sharePayload}
-                  onChange={(e) => setSharePayload(e.target.value)}
-                  placeholder="Copy this payload and share it, or paste a received payload and import"
+              <ShareExchangePanel
+              shareKind={shareKind}
+              shareLessonId={shareLessonId}
+              shareQuizId={shareQuizId}
+              generatedSharePayload={generatedSharePayload}
+              importSharePayload={importSharePayload}
+              shareStatus={shareStatus}
+              lessons={lessons}
+              quizBanks={quizBanks}
+              setShareKind={setShareKind}
+              setShareLessonId={setShareLessonId}
+              setShareQuizId={setShareQuizId}
+              setImportSharePayload={setImportSharePayload}
+              onGenerateSharePack={generateSharePack}
+              onCopyGeneratedSharePack={copyGeneratedSharePack}
+                  onImportSharePack={importSharePack}
                 />
-              </div>
-              {shareStatus ? <p className="status">{shareStatus}</p> : null}
-            </article>
+              </>
+            )}
 
-            <QuizBanksPanel
+            {quizWorkspace === "study" && (
+              <>
+                <QuizBanksPanel
               quizBanks={quizBanks}
               onSelectQuizBank={setSelectedQuizId}
               onStartQuizBank={startQuizAttempt}
-              onDeleteQuizBank={deleteQuizBank}
-            />
+                  onDeleteQuizBank={deleteQuizBank}
+                />
 
-            <AssessmentRuntimePanel
+              <AssessmentRuntimePanel
               activeQuiz={activeQuiz}
               activeQuestion={activeQuestion}
               activeQuestionIndex={activeQuestionIndex}
@@ -995,10 +1023,10 @@ export default function Page() {
               onPrevQuestion={() => setActiveQuestionIndex((prev) => Math.max(0, prev - 1))}
               onNextQuestion={() => setActiveQuestionIndex((prev) => Math.min((activeQuiz?.questions.length || 1) - 1, prev + 1))}
               onAdaptiveNext={goAdaptiveNext}
-              onSubmitQuiz={submitQuizAttempt}
-            />
+                  onSubmitQuiz={submitQuizAttempt}
+                />
 
-            {canUseInstructorFeatures ? (
+              {canUseInstructorFeatures ? (
               <>
                 <LmsConnectorPanel
                   canManageConnectors={canUseInstructorFeatures}
@@ -1027,7 +1055,7 @@ export default function Page() {
                   setBlueprint={setBlueprint}
                 />
               </>
-            ) : (
+              ) : (
               <>
                 <AccessDeniedPanel
                   heading="LMS Connector Access"
@@ -1043,6 +1071,8 @@ export default function Page() {
                   actionLabel="Open Auth"
                   onAction={() => setView("auth")}
                 />
+              </>
+                )}
               </>
             )}
           </>

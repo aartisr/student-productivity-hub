@@ -1,5 +1,7 @@
 # Quickstart (Student)
 
+> **Live workspace:** [Open Student Productivity Hub](https://sph.ai-aarti.com/).
+
 Use this one-page guide to get productive in under 10 minutes.
 
 ## 0 to 2 Minutes: Sign In

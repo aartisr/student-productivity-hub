@@ -1,5 +1,7 @@
 # Release Gates and Incident SLA
 
+> **Live workspace:** [Open Student Productivity Hub](https://sph.ai-aarti.com/).
+
 This checklist is the operational contract for shipping and support.
 
 ## Release Gates (Must Pass)

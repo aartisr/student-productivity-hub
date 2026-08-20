@@ -36,7 +36,7 @@ export function TimerPanel(props: TimerPanelProps) {
           <button className="warn" onClick={onToggleMode}>Toggle mode</button>
         </div>
       </div>
-      <p className="status">{timerStatus}</p>
+      <p className="status" role="status" aria-live="polite">{timerStatus}</p>
       <p className="compact-line">Total study: {totalStudyText} | Total break: {totalBreakText}</p>
     </article>
   );
@@ -70,7 +70,7 @@ export function GpaPanel(props: GpaPanelProps) {
         </div>
       ))}
       <button className="primary" onClick={onRunGpa}>Compute GPA</button>
-      {gpaText ? <p className="status">{gpaText}</p> : null}
+      {gpaText ? <p className="status" role="status" aria-live="polite">{gpaText}</p> : null}
     </article>
   );
 }
