@@ -2,5 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "installCommand": "npm ci --registry=https://registry.npmjs.org",
-  "buildCommand": "NEXTAUTH_URL=\"${NEXTAUTH_URL:-https://sph.ai-aarti.com}\" AUTH_URL=\"${AUTH_URL:-https://sph.ai-aarti.com}\" NEXTAUTH_URL_INTERNAL=\"${NEXTAUTH_URL_INTERNAL:-https://sph.ai-aarti.com}\" AUTH_URL_INTERNAL=\"${AUTH_URL_INTERNAL:-https://sph.ai-aarti.com}\" npm run build"
+  "buildCommand": "node scripts/vercel-build.mjs"
 }

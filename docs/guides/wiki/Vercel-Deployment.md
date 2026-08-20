@@ -4,7 +4,7 @@
 
 Student Productivity Hub is a Next.js application and deploys directly to Vercel. The repository includes [vercel.json](../../../vercel.json) so Vercel installs dependencies with `npm ci` and builds with `npm run build`.
 
-The Vercel install command explicitly uses `https://registry.npmjs.org`. The checked-in lockfile is cross-platform and does not contain private registry download URLs. The Vercel build command also replaces blank Auth.js URL variables with the canonical HTTPS URL before Next.js compiles the application.
+The Vercel install command explicitly uses `https://registry.npmjs.org`. The checked-in lockfile is cross-platform and does not contain private registry download URLs. The Vercel build command runs [scripts/vercel-build.mjs](../../../scripts/vercel-build.mjs), which replaces blank Auth.js URL variables with the canonical HTTPS URL before Next.js compiles the application.
 
 ## Before You Deploy
 
