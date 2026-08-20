@@ -51,6 +51,10 @@ function hasEnv(keys: readonly string[]) {
   return keys.every((key) => Boolean(process.env[key] && process.env[key]?.trim().length));
 }
 
+function missingEnv(keys: readonly string[]) {
+  return keys.filter((key) => !process.env[key]?.trim());
+}
+
 type AppRole = "student" | "instructor" | "admin";
 
 function parseEmailSet(raw: string | undefined): Set<string> {
@@ -180,8 +184,11 @@ if (hasEnv(providerEnvMap.gitlab)) {
 }
 
 if (providers.length === 0 && process.env.NODE_ENV !== "test") {
-  // Surface misconfiguration early; users otherwise only see an empty auth panel.
-  console.warn("No OAuth providers are configured. Set provider credentials in environment variables.");
+  const missingProviders = Object.entries(providerEnvMap)
+    .map(([providerId, keys]) => `${providerId}: ${missingEnv(keys).join(", ")}`)
+    .join("; ");
+  // Names only: deployment logs must never reveal credential values.
+  console.warn(`No OAuth providers are configured. Missing environment variables by provider: ${missingProviders}`);
 }
 
 export const authOptions: NextAuthOptions = {
