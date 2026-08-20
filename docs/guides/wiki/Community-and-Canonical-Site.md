@@ -6,6 +6,8 @@ The canonical home for Student Productivity Hub is:
 
 The GitHub repository and its Pages site exist to make the work inspectable, reusable, and easier to improve. They should always point people back to the canonical product experience.
 
+For the human story behind the project, including its author and classroom acknowledgments, read [Project Story and Thanks](Project-Story-and-Thanks.md).
+
 ## Ways To Participate
 
 - Use the app and note where a workflow saves time or creates friction.

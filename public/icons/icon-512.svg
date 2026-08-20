@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Student Productivity Hub</title>
+  <rect width="64" height="64" rx="14" fill="#174c4f"/>
+  <path d="M13 18.5c7.5-3.2 14.1-1.7 19 2.2v28c-4.9-3.9-11.5-5.4-19-2.2zM51 18.5c-7.5-3.2-14.1-1.7-19 2.2v28c4.9-3.9 11.5-5.4 19-2.2z" fill="#f7f3ec"/>
+  <path d="M32 20.7v28M18 25.5c4.5-.8 8.5.1 12 2.6M46 25.5c-4.5-.8-8.5.1-12 2.6" fill="none" stroke="#d9a441" stroke-linecap="round" stroke-width="2.5"/>
+</svg>

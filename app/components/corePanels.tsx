@@ -226,7 +226,14 @@ export function AssignmentsPanel(props: AssignmentsPanelProps) {
           <option>Low</option>
         </select>
       </div>
-      <button className="primary" onClick={onAddAssignment}>Add assignment</button>
+      <button
+        className="primary"
+        onClick={onAddAssignment}
+        disabled={!hwTitle.trim() || !hwSubject.trim() || !hwDue}
+        title="Enter a title, subject, and due date first"
+      >
+        Add assignment
+      </button>
       {hwStatus ? <div className="status" role="status" aria-live="polite">{hwStatus}</div> : null}
 
       {sortedAssignments.length ? (
@@ -269,7 +276,9 @@ export function PlannerPanel(props: PlannerPanelProps) {
         <label>Task</label>
         <input value={taskText} onChange={(e) => setTaskText(e.target.value)} placeholder="Revise chapter 2" />
       </div>
-      <button className="primary" onClick={onAddTask}>Add task</button>
+      <button className="primary" onClick={onAddTask} disabled={!taskText.trim()} title="Type a task first">
+        Add task
+      </button>
       {taskStatus ? <div className="status" role="status" aria-live="polite">{taskStatus}</div> : null}
 
       {planner.length ? (

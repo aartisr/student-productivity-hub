@@ -5,6 +5,9 @@ import { getToken } from "next-auth/jwt";
 function isPublicPath(pathname: string) {
   if (pathname === "/") return true;
   if (pathname.startsWith("/api/auth")) return true;
+  if (/^\/(about|community|resources|story)\.html$/.test(pathname)) return true;
+  if (/^\/(manifest\.webmanifest|robots\.txt|sitemap\.xml|llms\.txt|offline\.html|sw\.js)$/.test(pathname)) return true;
+  if (pathname.startsWith("/icons/")) return true;
   return false;
 }
 

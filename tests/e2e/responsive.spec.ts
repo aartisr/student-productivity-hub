@@ -1,6 +1,22 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("Responsive shell", () => {
+  test("recovers from malformed persisted top-level data", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("student-productivity-hub-v1", JSON.stringify({
+        currentUser: 42,
+        assignments: "not-a-record",
+        planner: null,
+        socialProof: [],
+      }));
+    });
+
+    await page.goto("/");
+
+    await expect(page.getByRole("heading", { name: "Student Productivity Hub" })).toBeVisible();
+    await expect(page.getByText(/Join 2,847 students already studying smarter/)).toBeVisible();
+  });
+
   test("renders core sections without horizontal overflow", async ({ page }) => {
     await page.goto("/");
 

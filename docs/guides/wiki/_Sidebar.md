@@ -3,6 +3,7 @@
 - [Home](Home.md)
 - [Project Story and Thanks](Project-Story-and-Thanks.md)
 - [Community and Canonical Site](Community-and-Canonical-Site.md)
+- [Privacy and Optional Analytics](../../community/privacy-and-analytics.md)
 - [Getting Started](Getting-Started.md)
 - [Quickstart Cheat Sheet](Quickstart-Cheat-Sheet.md)
 - [Quickstart Wall Poster](Quickstart-Wall-Poster.md)

@@ -1,6 +1,7 @@
 import { type Dispatch, type SetStateAction } from "react";
 import { buildProviderCompatibility, type QuizBank } from "../quizEngine";
 import { type AppData, type Lesson, type SharePack, uid } from "../domain";
+import { splitTokens } from "../lib/tokenizer";
 
 type UseLessonShareManagerArgs = {
   ensureSignedIn: () => boolean;
@@ -62,12 +63,6 @@ export function useLessonShareManager(args: UseLessonShareManagerArgs) {
     importSharePayload,
     setShareStatus,
   } = args;
-
-  const splitTokens = (raw: string) =>
-    raw
-      .split(/\n|,/)
-      .map((token) => token.trim())
-      .filter(Boolean);
 
   const resetLessonForm = (statusText = "Lesson form reset.") => {
     setLessonDraftId("");

@@ -30,6 +30,7 @@ Choose the path that matches the work in front of you.
 
 - [Contributing Guide](community/contributing.md): how to propose, build, test, and explain a useful change.
 - [Code of Conduct](community/code-of-conduct.md): the shared standard for participating with care.
+- [Privacy and Optional Analytics](community/privacy-and-analytics.md): telemetry defaults, consent, and deployment responsibilities.
 - [Research Notes](research/RESEARCH_NOTES.md): questions, assumptions, and opportunities for evidence-informed iteration.
 
 ## Explore The Product Story

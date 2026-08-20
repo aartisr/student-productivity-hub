@@ -3,7 +3,7 @@ const isProduction = process.env.NODE_ENV === "production";
 
 const cspProduction = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  "script-src 'self' 'unsafe-inline' https://www.clarity.ms https://us.i.posthog.com https://eu.i.posthog.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
@@ -17,7 +17,7 @@ const cspProduction = [
 
 const cspNonProduction = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.clarity.ms https://us.i.posthog.com https://eu.i.posthog.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",

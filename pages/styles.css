@@ -242,6 +242,13 @@ h2 {
   background: linear-gradient(135deg, var(--mint), var(--paper));
 }
 
+.story-note {
+  margin-top: 2rem;
+  padding: 1.35rem;
+  border-left: 5px solid var(--accent);
+  background: rgba(255, 253, 248, 0.72);
+}
+
 footer {
   display: flex;
   flex-wrap: wrap;

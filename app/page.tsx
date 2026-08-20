@@ -496,7 +496,7 @@ export default function Page() {
 
   const navModules = useMemo(() => {
     if (!currentUser) {
-      const guestOrder: ViewKey[] = ["home", "auth", "coach"];
+      const guestOrder: ViewKey[] = ["home", "auth", "assignments", "planner", "timer", "quiz", "coach"];
       const byKey = new Map(MODULE_CATALOG.map((item) => [item.key, item]));
       return guestOrder
         .map((key) => byKey.get(key))
@@ -725,6 +725,9 @@ export default function Page() {
           </details>
         </div>
       </header>
+      <p className="app-description">
+        A mobile-first study workspace for assignment planning, focused sessions, quiz practice, and learning progress.
+      </p>
 
       <AppNavigation
         modules={navModules}
@@ -1081,6 +1084,7 @@ export default function Page() {
         {view === "timer" && (
           <TimerPanel
             timerMode={timerMode}
+            running={running}
             timerStatus={timerStatus}
             remainingText={mmss(remainingSec)}
             totalStudyText={hhmmss(totals.study)}
@@ -1122,6 +1126,11 @@ export default function Page() {
             onSaveSettings={saveSettings}
           />
         )}
+
+        <footer className="app-footer">
+          <span>Made with care by Aarti S Ravikumar</span>
+          <a href="/story.html">Project story & thanks</a>
+        </footer>
       </section>
     </main>
   );

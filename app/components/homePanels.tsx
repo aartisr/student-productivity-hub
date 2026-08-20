@@ -156,16 +156,30 @@ export function OnboardingPanel(props: OnboardingPanelProps) {
       <p className="compact-line">
         Follow this guided path to unlock a productive setup quickly. Progress: {completeCount}/{steps.length} complete.
       </p>
-      <ul className="list onboarding-list mt-8">
-        {steps.map((step) => (
-          <li key={step.key} className={step.done ? "done" : ""}>
-            <div className="module-row">
-              <strong>{step.done ? "[done] " : "[todo] "}{step.title}</strong>
-              <button className="secondary" onClick={step.onAction}>{step.actionLabel}</button>
-            </div>
-          </li>
-        ))}
-      </ul>
+      {(() => {
+        const nextStep = steps.find((step) => !step.done);
+        return nextStep ? (
+          <div className="onboarding-next mt-8">
+            <strong>Next: {nextStep.title}</strong>
+            <button className="primary" onClick={nextStep.onAction}>{nextStep.actionLabel}</button>
+          </div>
+        ) : (
+          <p className="status mt-8">Your first-week setup is complete. Keep using the workspace at your own pace.</p>
+        );
+      })()}
+      <details className="onboarding-checklist mt-8">
+        <summary>View setup checklist</summary>
+        <ul className="list onboarding-list mt-6">
+          {steps.map((step) => (
+            <li key={step.key} className={step.done ? "done" : ""}>
+              <div className="module-row">
+                <strong>{step.done ? "[done] " : "[todo] "}{step.title}</strong>
+                <button className="secondary" onClick={step.onAction}>{step.actionLabel}</button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </details>
     </article>
   );
 }

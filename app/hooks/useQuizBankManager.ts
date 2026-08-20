@@ -10,6 +10,7 @@ import {
   type QuizQuestion,
 } from "../quizEngine";
 import { type AppData, uid } from "../domain";
+import { resolveAnswerTokens, splitTokens } from "../lib/tokenizer";
 
 type UseQuizBankManagerArgs = {
   ensureSignedIn: () => boolean;
@@ -77,28 +78,6 @@ export function useQuizBankManager(args: UseQuizBankManagerArgs) {
     setQuizExportText,
     selectedQuiz,
   } = args;
-
-  const splitTokens = (raw: string) =>
-    raw
-      .split(/\n|,/)
-      .map((token) => token.trim())
-      .filter(Boolean);
-
-  const resolveAnswerTokens = (tokens: string[], choices: string[]) => {
-    return tokens
-      .map((token) => {
-        if (/^[A-Z]$/i.test(token)) {
-          const idx = token.toUpperCase().charCodeAt(0) - 65;
-          return choices[idx] || "";
-        }
-        const numeric = Number(token);
-        if (Number.isInteger(numeric) && numeric >= 1 && numeric <= choices.length) {
-          return choices[numeric - 1] || "";
-        }
-        return token;
-      })
-      .filter(Boolean);
-  };
 
   const toggleQuizTarget = (providerId: string) => {
     setQuizTargets((prev) => (prev.includes(providerId) ? prev.filter((id) => id !== providerId) : [...prev, providerId]));

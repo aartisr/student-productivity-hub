@@ -1,5 +1,6 @@
 type TimerPanelProps = {
   timerMode: "study" | "break";
+  running: boolean;
   timerStatus: string;
   totalStudyText: string;
   totalBreakText: string;
@@ -13,6 +14,7 @@ type TimerPanelProps = {
 export function TimerPanel(props: TimerPanelProps) {
   const {
     timerMode,
+    running,
     timerStatus,
     totalStudyText,
     totalBreakText,
@@ -27,13 +29,13 @@ export function TimerPanel(props: TimerPanelProps) {
     <article className="panel">
       <h2>Pomodoro Engine</h2>
       <div className="timer-core">
-        <p>Mode: {timerMode}</p>
+        <p>Mode: {timerMode === "study" ? "Focus" : "Break"}</p>
         <h3>{remainingText}</h3>
         <div className="btn-row justify-center">
-          <button className="primary" onClick={onStart}>Start</button>
-          <button className="secondary" onClick={onPause}>Pause</button>
+          <button className="primary" onClick={onStart} disabled={running}>Start focus</button>
+          <button className="secondary" onClick={onPause} disabled={!running}>Pause</button>
           <button className="ghost" onClick={onReset}>Reset</button>
-          <button className="warn" onClick={onToggleMode}>Toggle mode</button>
+          <button className="warn" onClick={onToggleMode}>Switch to {timerMode === "study" ? "break" : "focus"}</button>
         </div>
       </div>
       <p className="status" role="status" aria-live="polite">{timerStatus}</p>

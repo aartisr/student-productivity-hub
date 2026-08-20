@@ -26,12 +26,29 @@ The Vercel install command explicitly uses `https://registry.npmjs.org`. The che
 | OAuth provider credentials | At least one provider | Configure only the providers you intend to offer. |
 | `INSTRUCTOR_EMAILS` | Recommended | Comma-separated instructor allowlist. |
 | `ADMIN_EMAILS` | Recommended | Comma-separated admin allowlist. |
+| `NEXT_PUBLIC_CLARITY_PROJECT_ID` | Optional | Microsoft Clarity project ID for aggregated UX insight. |
+| `NEXT_PUBLIC_POSTHOG_KEY` | Optional | PostHog project key for privacy-preserving product analytics. |
+| `NEXT_PUBLIC_POSTHOG_HOST` | Optional | `https://us.i.posthog.com` (default) or `https://eu.i.posthog.com`. |
 
 Do not configure a private npm registry or registry token in Vercel for this public project. Vercel should use the public npm registry specified by [vercel.json](../../../vercel.json).
 
 Do not leave `NEXTAUTH_URL`, `AUTH_URL`, `NEXTAUTH_URL_INTERNAL`, or `AUTH_URL_INTERNAL` as blank strings. A blank value can cause Auth.js to throw `Invalid URL` during static prerendering. The repository build command safely falls back to `https://sph.ai-aarti.com`, but production settings should still contain the canonical URL explicitly.
 
 The application intentionally refuses to run at production runtime without `AUTH_SECRET`.
+
+## Microsoft Clarity
+
+Microsoft Clarity is optional. A valid `NEXT_PUBLIC_CLARITY_PROJECT_ID` enables an in-app consent prompt; the Clarity script loads only after a visitor explicitly allows analytics. Add that ID in Vercel for the environments you intend to measure, then redeploy.
+
+The integration does not call Clarity with student emails, user IDs, names, assignment titles, quiz answers, or custom session data. Before enabling it in a classroom or for minors, review your institution's privacy requirements, publish an appropriate privacy notice, and obtain any consent required in your jurisdiction.
+
+## PostHog
+
+PostHog is optional. A valid `NEXT_PUBLIC_POSTHOG_KEY` enables an in-app consent prompt; the PostHog script loads only after a visitor explicitly allows analytics. By default it uses `https://us.i.posthog.com`; set `NEXT_PUBLIC_POSTHOG_HOST=https://eu.i.posthog.com` for the EU ingestion host.
+
+The built-in adapter captures page-level product signals only. It disables autocapture and session recording, does not call `identify`, and does not send student emails, user IDs, names, assignment titles, quiz answers, or custom session data. Keep these defaults unless a reviewed privacy and consent process justifies a change.
+
+Do not use an arbitrary PostHog host. The adapter accepts only the official US and EU ingestion hosts to preserve the application's Content Security Policy.
 
 ## OAuth Callback URLs
 
