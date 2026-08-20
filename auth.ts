@@ -11,6 +11,26 @@ import LinkedIn from "next-auth/providers/linkedin";
 import Slack from "next-auth/providers/slack";
 import Twitter from "next-auth/providers/twitter";
 
+function normalizeAuthUrlEnvironment(key: "NEXTAUTH_URL" | "AUTH_URL") {
+  const raw = process.env[key]?.trim();
+  if (!raw) {
+    delete process.env[key];
+    return;
+  }
+
+  try {
+    const url = new URL(raw);
+    if (url.protocol !== "https:" && url.protocol !== "http:") throw new Error("Unsupported protocol");
+    process.env[key] = url.toString().replace(/\/$/, "");
+  } catch {
+    console.warn(`${key} is not a valid HTTP(S) URL and will be ignored.`);
+    delete process.env[key];
+  }
+}
+
+normalizeAuthUrlEnvironment("NEXTAUTH_URL");
+normalizeAuthUrlEnvironment("AUTH_URL");
+
 const isProduction = process.env.NODE_ENV === "production";
 const isProductionBuildPhase = process.env.NEXT_PHASE === "phase-production-build";
 

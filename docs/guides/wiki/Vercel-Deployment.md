@@ -4,7 +4,7 @@
 
 Student Productivity Hub is a Next.js application and deploys directly to Vercel. The repository includes [vercel.json](../../../vercel.json) so Vercel installs dependencies with `npm ci` and builds with `npm run build`.
 
-The Vercel install command explicitly uses `https://registry.npmjs.org`. The checked-in lockfile is cross-platform and does not contain private registry download URLs.
+The Vercel install command explicitly uses `https://registry.npmjs.org`. The checked-in lockfile is cross-platform and does not contain private registry download URLs. The Vercel build command also replaces blank Auth.js URL variables with the canonical HTTPS URL before Next.js compiles the application.
 
 ## Before You Deploy
 
@@ -28,6 +28,8 @@ The Vercel install command explicitly uses `https://registry.npmjs.org`. The che
 | `ADMIN_EMAILS` | Recommended | Comma-separated admin allowlist. |
 
 Do not configure a private npm registry or registry token in Vercel for this public project. Vercel should use the public npm registry specified by [vercel.json](../../../vercel.json).
+
+Do not leave `NEXTAUTH_URL`, `AUTH_URL`, `NEXTAUTH_URL_INTERNAL`, or `AUTH_URL_INTERNAL` as blank strings. A blank value can cause Auth.js to throw `Invalid URL` during static prerendering. The repository build command safely falls back to `https://sph.ai-aarti.com`, but production settings should still contain the canonical URL explicitly.
 
 The application intentionally refuses to run at production runtime without `AUTH_SECRET`.
 
@@ -100,5 +102,6 @@ For authenticated preview testing, use a dedicated OAuth application with previe
 | Session cannot access a protected page | Cookie or canonical host mismatch | Verify the custom domain, HTTPS, and `NEXTAUTH_URL`. |
 | `npm ci` returns `E401` | Stale private npm registry or token in Vercel | Remove `NPM_CONFIG_REGISTRY`, `NPM_TOKEN`, and `NODE_AUTH_TOKEN` from Vercel project settings, then redeploy. |
 | `npm ci` reports missing `@next/swc` or `sharp` packages | Old lockfile was deployed | Ensure the latest `package-lock.json` is pushed, then redeploy. |
+| Build fails on `/_not-found` with `Invalid URL` | An Auth.js URL variable is blank | Set `NEXTAUTH_URL` to `https://sph.ai-aarti.com` and remove blank `AUTH_URL`/internal URL variables, then redeploy. |
 
 For operational context beyond deployment, see the [Operator and Admin Runbook](Operator-and-Admin-Runbook.md) and [Authentication and Roles](Authentication-and-Roles.md).
