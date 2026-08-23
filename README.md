@@ -9,6 +9,8 @@
 
 **Canonical website:** [https://sph.ai-aarti.com](https://sph.ai-aarti.com/)
 
+**Explore the product:** [Study Planner](https://sph.ai-aarti.com/study-planner) · [Focus Timer](https://sph.ai-aarti.com/focus-timer) · [Quiz Practice](https://sph.ai-aarti.com/quiz-practice)
+
 I started this project with a simple frustration: students are often asked to do deeply demanding work with a scattered collection of tools that do not talk to one another. A deadline lives in one place, focus lives in another, revision lives somewhere else, and the feeling of progress is left to memory.
 
 Student Productivity Hub is an attempt to make that experience more humane. It brings planning, focused study, quiz practice, reflection, data portability, and role-aware support into one mobile-first workspace. It is not a claim to have solved learning. It is an invitation to keep improving the small conditions that make sustained learning more possible.
@@ -66,6 +68,8 @@ Submit the canonical sitemap URLs to IndexNow only when they have materially cha
 ```bash
 npm run indexnow:submit -- --submit
 ```
+
+For sitemap submission, answer-engine discovery assets, and ethical backlink outreach, see the [Search and Discovery Publication Guide](docs/guides/wiki/Search-Discovery.md).
 
 ## Documentation
 

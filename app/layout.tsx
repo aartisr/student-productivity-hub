@@ -105,12 +105,15 @@ const structuredData = {
     },
     {
       "@type": "SoftwareApplication",
+      "@id": `${siteUrl}/#application`,
       name: "Student Productivity Hub",
       url: siteUrl,
       applicationCategory: "EducationalApplication",
+      applicationSubCategory: "Student productivity and study planning",
       operatingSystem: "Web",
       description: metadata.description,
       creator: { "@id": `${siteUrl}/#author` },
+      publisher: { "@id": `${siteUrl}/#organization` },
       isAccessibleForFree: true,
       license: "https://opensource.org/licenses/MIT",
       featureList: [

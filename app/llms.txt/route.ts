@@ -5,6 +5,11 @@ const content = `# Student Productivity Hub
 ## Canonical website
 - https://sph.ai-aarti.com/
 
+## Topic pages
+- https://sph.ai-aarti.com/study-planner - Free study planner for assignments, priorities, and deadlines.
+- https://sph.ai-aarti.com/focus-timer - Free focus timer for intentional study sessions and breaks.
+- https://sph.ai-aarti.com/quiz-practice - Quiz authoring, import/export, practice, and review workflows.
+
 ## What it does
 - Assignment and deadline planning
 - Focused study sessions and Pomodoro-style timing
@@ -12,6 +17,11 @@ const content = `# Student Productivity Hub
 - Progress, GPA, analytics, and study reflection workflows
 - Instructor and role-aware support workflows
 - Local-first persistence with export and backup options
+
+## Direct answers
+- Student Productivity Hub is a free, open-source educational web application.
+- It is designed for students and educators who need connected planning, focused study, quiz practice, and progress tracking.
+- The project is licensed under the MIT License and its source code is available on GitHub.
 
 ## Documentation
 - https://github.com/aartisr/student-productivity-hub/tree/master/docs

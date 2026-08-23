@@ -12,9 +12,13 @@
   "bugs": {
     "url": "https://github.com/aartisr/student-productivity-hub/issues"
   },
-  "homepage": "https://github.com/aartisr/student-productivity-hub#readme",
+  "homepage": "https://sph.ai-aarti.com",
   "keywords": [
     "student-productivity",
+    "study-planner",
+    "focus-timer",
+    "quiz-practice",
+    "open-source-education",
     "nextjs",
     "education",
     "quiz"

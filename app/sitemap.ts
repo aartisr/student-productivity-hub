@@ -11,24 +11,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${siteUrl}/about.html`,
+      url: `${siteUrl}/study-planner`,
       changeFrequency: "monthly",
-      priority: 0.7,
+      priority: 0.9,
     },
     {
-      url: `${siteUrl}/resources.html`,
+      url: `${siteUrl}/focus-timer`,
       changeFrequency: "monthly",
-      priority: 0.7,
+      priority: 0.8,
     },
     {
-      url: `${siteUrl}/community.html`,
+      url: `${siteUrl}/quiz-practice`,
       changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/story.html`,
-      changeFrequency: "monthly",
-      priority: 0.6,
+      priority: 0.8,
     },
   ];
 }
