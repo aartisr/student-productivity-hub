@@ -15,6 +15,19 @@ test.describe("Public project surfaces", () => {
     expect(body).toContain("Mr. Shaol");
   });
 
+  test("serves the about and resources pages", async ({ request }) => {
+    for (const [path, content] of [
+      ["/about.html", "About | Student Productivity Hub"],
+      ["/resources.html", "Resources | Student Productivity Hub"],
+    ]) {
+      const response = await request.get(path);
+
+      expect(response.ok(), `${path} should be available`).toBeTruthy();
+      expect(response.headers()["content-type"]).toContain("text/html");
+      await expect(response.text()).resolves.toContain(content);
+    }
+  });
+
   test("keeps public discovery resources available", async ({ request }) => {
     for (const path of ["/manifest.webmanifest", "/sitemap.xml", "/robots.txt", "/llms.txt"]) {
       const response = await request.get(path);
