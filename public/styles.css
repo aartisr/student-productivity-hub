@@ -43,6 +43,11 @@ h2 { font-size: clamp(1.6rem, 3vw, 2.5rem); }
 .resource-list a { display: grid; gap: 0.2rem; padding: 1rem; border: 1px solid var(--line); border-radius: 7px; color: var(--ink); text-decoration: none; background: var(--paper); }
 .resource-list a strong { color: var(--brand); }
 .resource-list a span { color: var(--muted); }
+.value-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 2rem 0 0; }
+.value-grid article { min-width: 0; padding: 1.5rem; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); }
+.value-grid span { color: var(--accent); font-size: 0.78rem; font-weight: 800; }
+.value-grid h2 { margin-top: 1.2rem; font-size: 1.45rem; }
+.value-grid p, .community-note { color: var(--muted); }
 footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; padding: 1.5rem 0 2rem; color: var(--muted); font-size: 0.85rem; }
 footer p { margin: 0; }
 footer a { color: var(--brand); font-weight: 700; }
@@ -53,4 +58,5 @@ footer a { color: var(--brand); font-weight: 700; }
   .site-nav { justify-content: flex-start; }
   .wordmark { font-size: 1.05rem; }
   .page-content { padding: 1.5rem 1.1rem; }
+  .value-grid { grid-template-columns: 1fr; }
 }

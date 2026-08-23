@@ -15,10 +15,11 @@ test.describe("Public project surfaces", () => {
     expect(body).toContain("Mr. Shaol");
   });
 
-  test("serves the about and resources pages", async ({ request }) => {
+  test("serves the static project pages", async ({ request }) => {
     for (const [path, content] of [
       ["/about.html", "About | Student Productivity Hub"],
       ["/resources.html", "Resources | Student Productivity Hub"],
+      ["/community.html", "Community | Student Productivity Hub"],
     ]) {
       const response = await request.get(path);
 
