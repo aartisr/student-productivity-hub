@@ -1,0 +1,6 @@
+{
+  "name": "Student Productivity Hub",
+  "description": "An all-in-one premium study operating system featuring an advanced study planner, Pomodoro timer with ambient synthesizer, smart notes, academic goal tracker, and AI study co-pilot.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
